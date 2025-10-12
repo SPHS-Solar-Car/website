@@ -1,41 +1,28 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Loader2, Image as ImageIcon } from "lucide-react";
 import { DriveResource } from "@/lib/googleAppsScript";
 import { GOOGLE_SCRIPT_URL } from "@/config/googleScript";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useQuery } from "@tanstack/react-query";
 
 export function GallerySection() {
-  const [images, setImages] = useState<DriveResource[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<DriveResource | null>(null);
 
-  const fetchImages = async () => {
-    setIsLoading(true);
-
-    try {
+  const { data: images = [], isLoading } = useQuery({
+    queryKey: ['gallery-images'],
+    queryFn: async () => {
       const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=resources`);
       const data = await response.json();
       
       if (data.success && data.resources) {
-        setImages(data.resources);
+        return data.resources;
       }
-    } catch (error) {
-      console.error('Error fetching gallery images:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchImages();
-    
-    // Auto-refresh every minute
-    const interval = setInterval(() => {
-      fetchImages();
-    }, 60000);
-
-    return () => clearInterval(interval);
-  }, []);
+      return [];
+    },
+    staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
+    gcTime: 30 * 60 * 1000, // Cache kept for 30 minutes
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <section id="gallery" className="py-24 px-6 lg:px-8 bg-muted/30">

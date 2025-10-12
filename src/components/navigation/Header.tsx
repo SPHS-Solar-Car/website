@@ -7,6 +7,7 @@ const navigation = [
   { name: "Home", href: "/" },
   { name: "About", href: "/#about" },
   { name: "Events", href: "/#events" },
+  { name: "Gallery", href: "/#gallery" },
   { name: "Points", href: "/points" },
   { name: "How to Join", href: "/join" },
   { name: "Donate", href: "/sponsor" },
@@ -69,6 +70,13 @@ export function Header() {
                       eventsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                   }, 100);
+                } else if (item.href === '/#gallery') {
+                  setTimeout(() => {
+                    const gallerySection = document.getElementById('gallery');
+                    if (gallerySection) {
+                      gallerySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }, 100);
                 }
               }}
             >
@@ -114,6 +122,13 @@ export function Header() {
                           const eventsSection = document.getElementById('events');
                           if (eventsSection) {
                             eventsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                        }, 100);
+                      } else if (item.href === '/#gallery') {
+                        setTimeout(() => {
+                          const gallerySection = document.getElementById('gallery');
+                          if (gallerySection) {
+                            gallerySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                           }
                         }, 100);
                       }
