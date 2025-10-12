@@ -99,50 +99,12 @@ export function EventsSection() {
     return 'Event';
   };
 
-  const addToGoogleCalendar = (event: CalendarEvent) => {
-    // Handle both formats: Google Script events (date/time fields) and fallback events (start/end fields)
-    let startDate: Date;
-    let endDate: Date;
-
-    if ((event as any).date && (event as any).time) {
-      // Google Script format: "10/12/2025" and "11:00:00 AM"
-      const dateStr = (event as any).date;
-      const timeStr = (event as any).time;
-      startDate = new Date(`${dateStr} ${timeStr}`);
-      // Default to 1 hour duration
-      endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
-    } else {
-      // Fallback format with start/end
-      startDate = new Date(event.start);
-      endDate = new Date(event.end);
-    }
-
-    // Format dates for Google Calendar URL
-    const formatDateForGoogle = (date: Date) => {
-      return date.toISOString().replace(/-|:|\.\d+/g, '');
-    };
-
-    const start = formatDateForGoogle(startDate);
-    const end = formatDateForGoogle(endDate);
-    
-    const params = new URLSearchParams({
-      action: 'TEMPLATE',
-      text: event.title,
-      dates: `${start}/${end}`,
-      details: event.description || '',
-      location: event.location || '',
-    });
-
-    const url = `https://www.google.com/calendar/render?${params.toString()}`;
-    window.open(url, '_blank');
-  };
-
   return (
-    <section id="events" className="py-12 sm:py-20 bg-background">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12 sm:mb-16">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">Upcoming Events</h2>
+    <section id="events" className="py-20 bg-background">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold">Upcoming Events</h2>
             <Button
               variant="outline"
               size="sm"
@@ -154,11 +116,11 @@ export function EventsSection() {
               Refresh
             </Button>
           </div>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Stay updated with our latest activities, competitions, and team meetings.
           </p>
           {lastUpdated && (
-            <p className="text-xs sm:text-sm text-muted-foreground mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               Last updated: {lastUpdated.toLocaleString()}
             </p>
           )}
@@ -168,11 +130,7 @@ export function EventsSection() {
           {events.slice(0, 4).map((event) => {
             const eventType = getEventType(event.title);
             return (
-              <Card 
-                key={event.id} 
-                className="hover:shadow-solar transition-smooth cursor-pointer"
-                onClick={() => addToGoogleCalendar(event)}
-              >
+              <Card key={event.id} className="hover:shadow-solar transition-smooth">
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <CardTitle className="text-xl">{event.title}</CardTitle>
