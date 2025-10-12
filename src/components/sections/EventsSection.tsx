@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Clock, RefreshCw } from "lucide-react";
 import { CalendarEvent } from "@/lib/googleAppsScript";
 import { GOOGLE_SCRIPT_URL } from "@/config/googleScript";
+import { useQuery } from "@tanstack/react-query";
 
 // Fallback events for when Google Calendar is not configured
 const fallbackEvents = [
@@ -34,30 +34,21 @@ const fallbackEvents = [
 ];
 
 export function EventsSection() {
-  const [events, setEvents] = useState<CalendarEvent[]>(fallbackEvents);
-  const [isLoading, setIsLoading] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-
-  const fetchEvents = async () => {
-    setIsLoading(true);
-    try {
+  const { data: events = fallbackEvents, isLoading, refetch } = useQuery({
+    queryKey: ['calendar-events'],
+    queryFn: async () => {
       const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=events`);
       const data = await response.json();
       
       if (data.success && data.events && data.events.length > 0) {
-        setEvents(data.events);
-        setLastUpdated(new Date());
+        return data.events;
       }
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
+      return fallbackEvents;
+    },
+    staleTime: 5 * 60 * 1000, // Data stays fresh for 5 minutes
+    gcTime: 30 * 60 * 1000, // Cache kept for 30 minutes
+    refetchOnWindowFocus: false,
+  });
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -99,16 +90,54 @@ export function EventsSection() {
     return 'Event';
   };
 
+  const addToGoogleCalendar = (event: CalendarEvent) => {
+    // Handle both formats: Google Script events (date/time fields) and fallback events (start/end fields)
+    let startDate: Date;
+    let endDate: Date;
+
+    if ((event as any).date && (event as any).time) {
+      // Google Script format: "10/12/2025" and "11:00:00 AM"
+      const dateStr = (event as any).date;
+      const timeStr = (event as any).time;
+      startDate = new Date(`${dateStr} ${timeStr}`);
+      // Default to 1 hour duration
+      endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+    } else {
+      // Fallback format with start/end
+      startDate = new Date(event.start);
+      endDate = new Date(event.end);
+    }
+
+    // Format dates for Google Calendar URL
+    const formatDateForGoogle = (date: Date) => {
+      return date.toISOString().replace(/-|:|\.\d+/g, '');
+    };
+
+    const start = formatDateForGoogle(startDate);
+    const end = formatDateForGoogle(endDate);
+    
+    const params = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: event.title,
+      dates: `${start}/${end}`,
+      details: event.description || '',
+      location: event.location || '',
+    });
+
+    const url = `https://www.google.com/calendar/render?${params.toString()}`;
+    window.open(url, '_blank');
+  };
+
   return (
-    <section id="events" className="py-20 bg-background">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <h2 className="text-3xl md:text-4xl font-bold">Upcoming Events</h2>
+    <section id="events" className="py-12 sm:py-20 bg-background">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="text-center mb-12 sm:mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">Upcoming Events</h2>
             <Button
               variant="outline"
               size="sm"
-              onClick={fetchEvents}
+              onClick={() => refetch()}
               disabled={isLoading}
               className="flex items-center gap-2"
             >
@@ -116,21 +145,20 @@ export function EventsSection() {
               Refresh
             </Button>
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
             Stay updated with our latest activities, competitions, and team meetings.
           </p>
-          {lastUpdated && (
-            <p className="text-sm text-muted-foreground mt-2">
-              Last updated: {lastUpdated.toLocaleString()}
-            </p>
-          )}
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           {events.slice(0, 4).map((event) => {
             const eventType = getEventType(event.title);
             return (
-              <Card key={event.id} className="hover:shadow-solar transition-smooth">
+              <Card 
+                key={event.id} 
+                className="hover:shadow-solar transition-smooth cursor-pointer"
+                onClick={() => addToGoogleCalendar(event)}
+              >
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <CardTitle className="text-xl">{event.title}</CardTitle>
@@ -171,6 +199,20 @@ export function EventsSection() {
           })}
         </div>
         
+        <div className="text-center">
+          <Button
+            asChild
+            className="bg-black text-white hover:bg-black/90"
+          >
+            <a 
+              href="https://calendar.google.com/calendar/embed?src=president%40stonypointsolarcar.org&ctz=America%2FChicago"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Full Calendar
+            </a>
+          </Button>
+        </div>
       </div>
     </section>
   );
