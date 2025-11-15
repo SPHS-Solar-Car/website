@@ -60,6 +60,36 @@ serve(async (req) => {
       success_url: `${req.headers.get("origin")}/sponsor/success?tier=${tier || "custom"}&amount=${customAmount || ""}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get("origin")}/sponsor`,
       customer_email: undefined, // Let Stripe collect email
+      billing_address_collection: "required",
+      phone_number_collection: {
+        enabled: true,
+      },
+      custom_fields: [
+        {
+          key: "full_name",
+          label: {
+            type: "custom",
+            custom: "Full Name",
+          },
+          type: "text",
+          optional: false,
+        },
+        {
+          key: "public_sponsor",
+          label: {
+            type: "custom",
+            custom: "I want to be recognized as a public sponsor",
+          },
+          type: "dropdown",
+          dropdown: {
+            options: [
+              { label: "Yes, recognize me publicly", value: "yes" },
+              { label: "No, I'm donating privately", value: "no" },
+            ],
+          },
+          optional: false,
+        },
+      ],
     });
 
     // Send receipt email in the background after session is created

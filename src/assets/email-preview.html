@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      line-height: 1.6; 
+      color: #333; 
+      margin: 0;
+      padding: 0;
+    }
+    .container { 
+      max-width: 600px; 
+      margin: 0 auto; 
+      padding: 0;
+    }
+    .header { 
+      background-color: #000; 
+      color: #fff; 
+      padding: 30px; 
+      text-align: center; 
+    }
+    .header h1 {
+      margin: 0 0 10px 0;
+      font-size: 28px;
+    }
+    .header p {
+      margin: 0;
+      font-size: 16px;
+    }
+    .content { 
+      background-color: #f9f9f9; 
+      padding: 30px; 
+    }
+    .content h2 {
+      color: #000;
+      margin-top: 0;
+    }
+    .receipt-box { 
+      background-color: #fff; 
+      border: 2px solid #000; 
+      padding: 20px; 
+      margin: 20px 0; 
+    }
+    .receipt-box h3 {
+      margin-top: 0;
+      border-bottom: 2px solid #000;
+      padding-bottom: 10px;
+      color: #000;
+    }
+    .amount { 
+      font-size: 32px; 
+      font-weight: bold; 
+      color: #000; 
+      margin: 10px 0; 
+    }
+    .info-row { 
+      display: flex; 
+      justify-content: space-between; 
+      padding: 10px 0; 
+      border-bottom: 1px solid #eee; 
+    }
+    .info-row:last-of-type {
+      border-bottom: 2px solid #000;
+    }
+    .label { 
+      font-weight: bold; 
+    }
+    .tax-info {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-left: 4px solid #000;
+    }
+    .tax-info p {
+      margin: 5px 0;
+    }
+    .benefits-section h3 {
+      color: #000;
+      margin-bottom: 15px;
+    }
+    .benefits-list {
+      background-color: #fff;
+      padding: 20px;
+      border-left: 4px solid #000;
+      list-style: none;
+      margin: 0;
+    }
+    .benefits-list li {
+      padding: 5px 0;
+      margin-bottom: 8px;
+    }
+    .next-steps {
+      margin-top: 20px;
+    }
+    .next-steps ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .next-steps li {
+      padding: 5px 0;
+    }
+    .footer { 
+      text-align: center; 
+      padding: 20px; 
+      color: #666; 
+      font-size: 12px;
+      background-color: #f0f0f0;
+    }
+    .footer p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Sponsorship Receipt</h1>
+      <p>Stony Point Solar Car Team</p>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content">
+      <h2>Thank You for Your Generous Support!</h2>
+      <p>We are deeply grateful for your <strong>Platinum</strong> tier sponsorship. Your contribution directly supports our mission to design, build, and race a solar-powered vehicle.</p>
+      
+      <!-- Receipt Box -->
+      <div class="receipt-box">
+        <h3>Tax Receipt</h3>
+        
+        <div class="info-row">
+          <span class="label">Receipt Date:</span>
+          <span>January 11, 2025</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Transaction ID:</span>
+          <span>cs_test_abc123xyz</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Sponsorship Tier:</span>
+          <span>Platinum</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Donation Amount:</span>
+          <span class="amount">$6,500.00</span>
+        </div>
+        
+        <!-- Tax Information -->
+        <div class="tax-info">
+          <p><strong>Tax Information:</strong></p>
+          <p>EIN: 746002018</p>
+          <p style="font-size: 12px;">This donation is tax-deductible to the extent allowed by law. Please consult your tax advisor for details.</p>
+        </div>
+      </div>
+      
+      <!-- Benefits Section -->
+      <div class="benefits-section">
+        <h3>Your Sponsorship Benefits:</h3>
+        <ul class="benefits-list">
+          <li>✓ Tax Deduction</li>
+          <li>✓ Car Updates via Newsletter</li>
+          <li>✓ Logo on Website</li>
+          <li>✓ Featured in our Newsletter</li>
+          <li>✓ Social Media Recognition</li>
+          <li>✓ Name on Team Trailer</li>
+          <li>✓ Logo on Banner</li>
+          <li>✓ Logo on Team Apparel</li>
+          <li>✓ Name on Car</li>
+          <li>✓ Media Coverage</li>
+          <li>✓ Priority Placement and Sizing of Logo on Car</li>
+        </ul>
+      </div>
+      
+      <!-- Next Steps -->
+      <div class="next-steps">
+        <p><strong>Next Steps:</strong></p>
+        <p>Our team will contact you within 48 hours to:</p>
+        <ul>
+          <li>✓ Collect your logo and branding materials</li>
+          <li>✓ Discuss placement and visibility options</li>
+          <li>✓ Schedule updates on our progress</li>
+        </ul>
+      </div>
+      
+      <p>If you have any questions, please don't hesitate to contact us.</p>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <p>This is an automated receipt from Stony Point Solar Car Team</p>
+      <p><strong>Please save this email for your tax records</strong></p>
+    </div>
+  </div>
+</body>
+</html>

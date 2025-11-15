@@ -7,9 +7,11 @@ import Index from "./pages/Index";
 import JoinPage from "./pages/JoinPage";
 import ContactPage from "./pages/ContactPage";
 import PointsPage from "./pages/PointsPage";
+import SponsorsPage from "./pages/SponsorsPage";
 import SponsorPage from "./pages/SponsorPage";
 import SponsorSuccessPage from "./pages/SponsorSuccessPage";
 import TestEmailPage from "./pages/TestEmailPage";
+import TestAdminEmailPage from "./pages/TestAdminEmailPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,9 +27,11 @@ const App = () => (
           <Route path="/join" element={<JoinPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/points" element={<PointsPage />} />
+          <Route path="/sponsors" element={<SponsorsPage />} />
           <Route path="/sponsor" element={<SponsorPage />} />
           <Route path="/sponsor/success" element={<SponsorSuccessPage />} />
           <Route path="/test-email" element={<TestEmailPage />} />
+          <Route path="/test-admin-email" element={<TestAdminEmailPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

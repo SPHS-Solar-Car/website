@@ -35,6 +35,21 @@ const PointsPage = () => {
   const [studentId, setStudentId] = useState("");
   const [lookupData, setLookupData] = useState<StudentLookupData | null>(null);
   const [lookupLoading, setLookupLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const handlePasswordSubmit = () => {
+    const correctPassword = "TIGER2025";
+    if (password === correctPassword) {
+      setIsAuthenticated(true);
+      setPasswordError(false);
+      toast.success("Access granted!");
+    } else {
+      setPasswordError(true);
+      toast.error("Incorrect password");
+    }
+  };
+
   const handleLookupStudent = async () => {
     if (!studentId.trim()) {
       toast.error("Please enter your name");
@@ -64,6 +79,46 @@ const PointsPage = () => {
       setLookupLoading(false);
     }
   };
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-24 pb-16 px-6 lg:px-8">
+          <div className="max-w-md mx-auto">
+            <Card>
+              <CardHeader>
+                <CardTitle>Password Required</CardTitle>
+                <CardDescription>Enter the password to access the points tracker</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <Input
+                    type="password"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setPasswordError(false);
+                    }}
+                    onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                    className={passwordError ? "border-destructive" : ""}
+                  />
+                  <Button
+                    onClick={handlePasswordSubmit}
+                    className="w-full text-slate-50 bg-gray-950 hover:bg-gray-800"
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return <div className="min-h-screen bg-background">
       <Header />
       

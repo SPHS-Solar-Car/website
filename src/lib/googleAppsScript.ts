@@ -1,6 +1,5 @@
 // Google Apps Script Integration Service
 // This service handles communication with Google Apps Script endpoints
-
 export interface CalendarEvent {
   id: string;
   title: string;
@@ -242,6 +241,29 @@ class GoogleAppsScriptService {
     } catch (error) {
       console.error('Error looking up student:', error);
       return { success: false, message: 'Lookup failed' };
+    }
+  }
+
+  // Get sponsor logos from Drive folders
+  async getSponsorLogos(): Promise<any> {
+    if (!this.baseUrl) {
+      console.warn('Google Apps Script URL not configured');
+      return { success: false, sponsors: {} };
+    }
+
+    try {
+      const response = await fetch(`${this.baseUrl}?type=sponsors`, {
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching sponsor logos:', error);
+      return { success: false, sponsors: {} };
     }
   }
 }

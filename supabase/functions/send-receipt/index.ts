@@ -16,6 +16,7 @@ interface ReceiptRequest {
   amount: number; // in cents
   tier: string;
   sessionId: string;
+  publicSponsor?: string;
 }
 
 const formatCurrency = (cents: number) => {
@@ -102,9 +103,9 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, amount, tier, sessionId }: ReceiptRequest = await req.json();
+    const { email, amount, tier, sessionId, publicSponsor }: ReceiptRequest = await req.json();
 
-    console.log("Sending receipt to:", email, "Amount:", amount, "Tier:", tier);
+    console.log("Sending receipt to:", email, "Amount:", amount, "Tier:", tier, "Public:", publicSponsor);
 
     // Automatically determine tier based on amount if it's a custom donation
     const actualTier = tier === "custom" ? getTierName(amount).toLowerCase() : tier;
@@ -118,9 +119,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     const benefits = getTierBenefits(actualTier);
     const benefitsList = benefits.map(b => `<li style="margin-bottom: 8px;">${b}</li>`).join('');
+    
+    // Show tier info only if public sponsor
+    const showTierInfo = publicSponsor === 'yes';
+    // Show next steps only if public sponsor and not custom tier
+    const showNextSteps = publicSponsor === 'yes' && tier !== 'custom';
 
     const emailResponse = await resend.emails.send({
-      from: "Stony Point Solar Car Team <onboarding@resend.dev>",
+      from: "Stony Point Solar Car Team <noreply@receipt.stonypointsolarcar.org>",
       to: [email],
       subject: `Thank You for Your ${tierName} Sponsorship - Tax Receipt`,
       html: `
@@ -151,7 +157,7 @@ const handler = async (req: Request): Promise<Response> => {
             
             <div class="content">
               <h2>Thank You for Your Generous Support!</h2>
-              <p>We are deeply grateful for your ${tierName} tier sponsorship. Your contribution directly supports our mission to design, build, and race a solar-powered vehicle.</p>
+              <p>We are deeply grateful for your ${showTierInfo ? tierName + ' tier ' : ''}sponsorship. Your contribution directly supports our mission to design, build, and race a solar-powered vehicle.</p>
               
               <div class="receipt-box">
                 <h3 style="margin-top: 0; border-bottom: 2px solid #000; padding-bottom: 10px;">Tax Receipt</h3>
@@ -166,10 +172,12 @@ const handler = async (req: Request): Promise<Response> => {
                   <span>${sessionId}</span>
                 </div>
                 
+                ${showTierInfo ? `
                 <div class="info-row">
                   <span class="label">Sponsorship Tier:</span>
                   <span>${tierName}</span>
                 </div>
+                ` : ''}
                 
                 <div class="info-row" style="border-bottom: 2px solid #000;">
                   <span class="label">Donation Amount:</span>
@@ -188,6 +196,7 @@ const handler = async (req: Request): Promise<Response> => {
                 ${benefitsList}
               </ul>
               
+              ${showNextSteps ? `
               <p><strong>Next Steps:</strong></p>
               <p>Our team will contact you within 48 hours to:</p>
               <ul>
@@ -195,6 +204,7 @@ const handler = async (req: Request): Promise<Response> => {
                 <li>✓ Discuss placement and visibility options</li>
                 <li>✓ Schedule updates on our progress</li>
               </ul>
+              ` : ''}
               
               <p>If you have any questions, please don't hesitate to contact us.</p>
             </div>

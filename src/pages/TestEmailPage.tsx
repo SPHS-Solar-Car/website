@@ -14,7 +14,7 @@ const TestEmailPage = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState("6500");
-  const [tier, setTier] = useState("platinum");
+  const [tier, setTier] = useState("custom");
 
   const handleSendTestEmail = async () => {
     if (!email) {

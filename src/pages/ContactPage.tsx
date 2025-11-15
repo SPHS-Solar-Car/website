@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Header } from "@/components/navigation/Header";
 import { Footer } from "@/components/sections/Footer";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Phone, Send, MessageSquare, Users, ExternalLink } from "lucide-react";
+import { Mail, Phone, Send, MessageSquare, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 const contactInfo = [
   {
@@ -15,26 +15,6 @@ const contactInfo = [
     title: "Email",
     detail: "vp-communications@stonypointsolarcar.org",
     description: "General inquiries and information",
-  },
-];
-const teamLeads = [
-  {
-    name: "Ishan Singhal",
-    role: "Team Captain",
-    email: "ishansinghal123@gmail.com",
-    specialty: "Project Management & Strategy",
-  },
-  {
-    name: "Jason Hanhe",
-    role: "Electrical Lead",
-    email: "Jason Hanhe@school.edu",
-    specialty: "Electrical Systems & Solar Technology",
-  },
-  {
-    name: "Caleb Brown",
-    role: "Mechanical Lead",
-    email: "Caleb.Brown@school.edu",
-    specialty: "Mechanical Design & Aerodynamics",
   },
 ];
 export default function ContactPage() {
@@ -126,34 +106,6 @@ export default function ContactPage() {
                   ))}
                 </div>
               </div>
-
-              {/* Team Leads */}
-              <Card id="team-leaders" className="bg-muted">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="h-6 w-6" />
-                    Team Leadership
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="mb-6">
-                    Connect directly with our team leads for specific questions or collaboration opportunities.
-                  </p>
-                  <div className="space-y-4">
-                    {teamLeads.map((lead, index) => (
-                      <div key={index} className="border-b border-border pb-4 last:border-b-0">
-                        <h4 className="font-semibold">{lead.name}</h4>
-                        <p className="text-sm text-muted-foreground mb-1">{lead.role}</p>
-                        <p className="text-xs text-muted-foreground mb-2">{lead.specialty}</p>
-                        <a href={`mailto:${lead.email}`} className="text-sm flex items-center gap-1 hover:underline">
-                          <Mail className="h-3 w-3" />
-                          {lead.email}
-                        </a>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
 
               {/* Social Links */}
               <Card>

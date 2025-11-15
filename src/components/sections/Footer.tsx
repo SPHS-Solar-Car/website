@@ -10,6 +10,7 @@ const footerLinks = {
   resources: [
     { name: "How to Join", href: "/join" },
     { name: "Events", href: "#events" },
+    { name: "Points", href: "/points" },
   ],
   connect: [
     { name: "Contact", href: "/contact" },
@@ -59,16 +60,12 @@ export function Footer() {
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <img
-                src="/tiger-logo.png"
-                alt="Solar Car Team Logo"
-                className="h-10 w-10"
-              />
+              <img src="/tiger-logo.png" alt="Solar Car Team Logo" className="h-10 w-10" />
               <span className="text-xl font-bold">Stony Point Solar Car</span>
             </Link>
             <p className="text-background/80 mb-6 leading-relaxed">
-              Innovating sustainable transportation through student-driven solar vehicle development and competitive
-              racing.
+              A 501(c)(3) innovating sustainable transportation through student-driven solar vehicle development and
+              competitive racing.
             </p>
             <div className="space-y-2 text-sm text-background/70">
               <a
@@ -142,19 +139,8 @@ export function Footer() {
         <div className="border-t border-background/20 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-background/60 text-sm">
-              © 2024 Stony Point Solar Car Team. Racing towards a sustainable future.
+              © 2025 Stony Point Solar Car Team. All rights reserved. Created by Ishan Singhal
             </p>
-            <div className="flex items-center gap-6 text-sm text-background/60">
-              <a href="#privacy" className="hover:text-background transition-smooth">
-                Privacy Policy
-              </a>
-              <a href="#terms" className="hover:text-background transition-smooth">
-                Terms of Use
-              </a>
-              <a href="#accessibility" className="hover:text-background transition-smooth">
-                Accessibility
-              </a>
-            </div>
           </div>
         </div>
       </div>

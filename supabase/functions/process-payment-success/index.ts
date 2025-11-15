@@ -23,8 +23,10 @@ serve(async (req) => {
       apiVersion: "2025-08-27.basil",
     });
 
-    // Retrieve the checkout session
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    // Retrieve the checkout session with expanded data
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ['customer', 'line_items'],
+    });
 
     if (session.payment_status !== "paid") {
       throw new Error("Payment not completed");
@@ -39,24 +41,48 @@ serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Send receipt email
+    // Extract all the data we need
     const tier = session.metadata?.tier || "custom";
     const amount = session.metadata?.amount 
       ? parseInt(session.metadata.amount) 
       : session.amount_total || 0;
+    
+    const fullName = session.custom_fields?.find(f => f.key === 'full_name')?.text?.value || '';
+    const publicSponsor = session.custom_fields?.find(f => f.key === 'public_sponsor')?.dropdown?.value || 'no';
+    const email = session.customer_details?.email || '';
+    const phone = session.customer_details?.phone || '';
+    const billingAddress = session.customer_details?.address || {};
 
-    const { error: emailError } = await supabase.functions.invoke("send-receipt", {
+    // Send receipt email to sponsor
+    const { error: receiptError } = await supabase.functions.invoke("send-receipt", {
       body: {
-        email: session.customer_details?.email,
+        email: email,
         amount: amount,
         tier: tier,
         sessionId: sessionId,
+        publicSponsor: publicSponsor,
       },
     });
 
-    if (emailError) {
-      console.error("Error sending receipt:", emailError);
-      // Don't fail the whole request if email fails
+    if (receiptError) {
+      console.error("Error sending receipt:", receiptError);
+    }
+
+    // Send admin notification email
+    const { error: adminError } = await supabase.functions.invoke("send-admin-notification", {
+      body: {
+        fullName,
+        email,
+        phone,
+        billingAddress,
+        amount,
+        tier,
+        publicSponsor,
+      },
+    });
+
+    if (adminError) {
+      console.error("Error sending admin notification:", adminError);
     }
 
     return new Response(

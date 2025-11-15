@@ -6,6 +6,17 @@ const CALENDAR_ID = 'c_4878007f96309e248f2110cc9dac2f871654c890a1f9d769060a08d3d
 const DRIVE_FOLDER_ID = '16SpBTQsYJDZejgLrSZZcQP66KQUU3tDi';
 const POINTS_SHEET_ID = '1aF2N7PQhSSfBqhEjjGHSAqlD4t8KuH6VQ0pI0veBeC0';
 
+// Sponsor Tier Folder IDs - Add your Google Drive folder IDs here
+// To get folder ID: Open folder in Google Drive, copy ID from URL
+// Example URL: https://drive.google.com/drive/folders/FOLDER_ID_HERE
+const SPONSOR_FOLDERS = {
+  bronze: 'YOUR_BRONZE_FOLDER_ID',
+  silver: 'YOUR_SILVER_FOLDER_ID',
+  gold: 'YOUR_GOLD_FOLDER_ID',
+  platinum: 'YOUR_PLATINUM_FOLDER_ID',
+  diamond: 'YOUR_DIAMOND_FOLDER_ID'  // Replace with your actual Diamond sponsor folder ID
+};
+
 // CRITICAL: Proper OPTIONS handler for CORS preflight requests
 function doOptions(e) {
   // This is essential for CORS preflight requests
@@ -60,6 +71,8 @@ function doGet(e) {
         return getGalleryImages();
       case 'points':
         return getMemberPoints();
+      case 'sponsors':
+        return getSponsorLogos();
       default:
         return ContentService
           .createTextOutput(JSON.stringify({ success: true, message: 'Solar Car API running' }))
@@ -492,6 +505,71 @@ function handleGetAllPoints() {
       success: false,
       error: 'Failed to get points data: ' + error.toString()
     });
+  }
+}
+
+// Sponsor Logos - Populates Sponsors Page
+function getSponsorLogos() {
+  try {
+    const sponsors = {
+      bronze: [],
+      silver: [],
+      gold: [],
+      platinum: [],
+      diamond: []
+    };
+    
+    // Fetch logos for each tier
+    Object.keys(SPONSOR_FOLDERS).forEach(tier => {
+      const folderId = SPONSOR_FOLDERS[tier];
+      if (folderId) {
+        try {
+          const folder = DriveApp.getFolderById(folderId);
+          const files = folder.getFiles();
+          
+          while (files.hasNext()) {
+            const file = files.next();
+            const mimeType = file.getBlob().getContentType();
+            
+            // Only include images
+            if (mimeType.startsWith('image/')) {
+              const fileId = file.getId();
+              sponsors[tier].push({
+                id: fileId,
+                name: file.getName(),
+                logo: `https://drive.google.com/uc?export=view&id=${fileId}`,
+                thumbnailLink: `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`
+              });
+            }
+          }
+        } catch (err) {
+          console.error(`Error fetching ${tier} sponsors:`, err);
+        }
+      }
+    });
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: true, sponsors: sponsors }))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeaders({
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      });
+      
+  } catch (error) {
+    console.error('Error getting sponsor logos:', error);
+    return ContentService
+      .createTextOutput(JSON.stringify({ 
+        success: false, 
+        error: 'Failed to get sponsor logos: ' + error.toString() 
+      }))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeaders({
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      });
   }
 }
 
