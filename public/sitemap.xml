@@ -1,39 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Updated sitemap generated on 2025-11-15 -->
   <url>
-    <loc>https://spsolarcars.lovable.app/</loc>
-    <lastmod>2025-01-15</lastmod>
+    <loc>https://stonypointsolarcar.org/</loc>
+    <lastmod>2025-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
   <url>
-    <loc>https://spsolarcars.lovable.app/join</loc>
-    <lastmod>2025-01-15</lastmod>
+    <loc>https://stonypointsolarcar.org/join</loc>
+    <lastmod>2025-11-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
   <url>
-    <loc>https://spsolarcars.lovable.app/contact</loc>
-    <lastmod>2025-01-15</lastmod>
+    <loc>https://stonypointsolarcar.org/how-to-join</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://stonypointsolarcar.org/contact</loc>
+    <lastmod>2025-11-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
-    <loc>https://spsolarcars.lovable.app/points</loc>
-    <lastmod>2025-01-15</lastmod>
+    <loc>https://stonypointsolarcar.org/contact-us</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://stonypointsolarcar.org/points</loc>
+    <lastmod>2025-11-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
+
   <url>
-    <loc>https://spsolarcars.lovable.app/sponsors</loc>
-    <lastmod>2025-01-15</lastmod>
+    <loc>https://stonypointsolarcar.org/sponsors</loc>
+    <lastmod>2025-11-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
   <url>
-    <loc>https://spsolarcars.lovable.app/sponsor</loc>
-    <lastmod>2025-01-15</lastmod>
+    <loc>https://stonypointsolarcar.org/sponsor</loc>
+    <lastmod>2025-11-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
+  <url>
+    <loc>https://stonypointsolarcar.org/support</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://stonypointsolarcar.org/support-us</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://stonypointsolarcar.org/sponsor/success</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://stonypointsolarcar.org/test-email</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+  </url>
+
+  <url>
+    <loc>https://stonypointsolarcar.org/test-admin-email</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+  </url>
+
 </urlset>
