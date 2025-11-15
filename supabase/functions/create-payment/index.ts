@@ -13,13 +13,23 @@ serve(async (req) => {
   }
 
   try {
-    const { priceId, tier, customAmount } = await req.json();
+    const { priceId, tier, customAmount, baseAmount } = await req.json();
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
 
+    // Calculate Stripe fee: 2.7% + $0.05
+    const calculateTotalWithFee = (amountInCents: number) => {
+      const stripeFeePercent = 0.027;
+      const stripeFeeFixed = 5; // 5 cents in cents
+      const totalAmount = Math.round(amountInCents + (amountInCents * stripeFeePercent) + stripeFeeFixed);
+      return totalAmount;
+    };
+
     let lineItems;
+    let donationAmount;
+    let totalAmount;
     
     if (customAmount) {
       // Custom donation amount (in cents)
@@ -27,21 +37,46 @@ serve(async (req) => {
         throw new Error("Minimum donation amount is $1.00");
       }
       
+      donationAmount = Math.round(customAmount);
+      totalAmount = calculateTotalWithFee(donationAmount);
+      
       lineItems = [
         {
           price_data: {
             currency: "usd",
             product_data: {
               name: "Custom Sponsorship Donation",
-              description: "Custom amount sponsorship for the Solar Car Team",
+              description: `Donation: $${(donationAmount / 100).toFixed(2)} + Stripe Fee: $${((totalAmount - donationAmount) / 100).toFixed(2)}`,
             },
-            unit_amount: Math.round(customAmount),
+            unit_amount: totalAmount,
+          },
+          quantity: 1,
+        },
+      ];
+    } else if (baseAmount) {
+      // Tier-based donation with base amount
+      if (baseAmount < 100) {
+        throw new Error("Minimum donation amount is $1.00");
+      }
+      
+      donationAmount = Math.round(baseAmount);
+      totalAmount = calculateTotalWithFee(donationAmount);
+      
+      lineItems = [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `${tier.charAt(0).toUpperCase() + tier.slice(1)} Tier Sponsorship`,
+              description: `Donation: $${(donationAmount / 100).toFixed(2)} + Stripe Fee: $${((totalAmount - donationAmount) / 100).toFixed(2)}`,
+            },
+            unit_amount: totalAmount,
           },
           quantity: 1,
         },
       ];
     } else {
-      // Tier-based donation
+      // Legacy tier-based donation (fallback to original price ID method)
       if (!priceId || !tier) {
         throw new Error("Price ID and tier are required for tier-based donations");
       }

@@ -97,12 +97,29 @@ const SponsorPage = () => {
   const [loading, setLoading] = useState<string | null>(null);
   const [customAmount, setCustomAmount] = useState("");
 
+  // Calculate Stripe fee: 2.7% + $0.05
+  const calculateStripeFee = (amount: number) => {
+    return (amount * 0.027) + 0.05;
+  };
+
+  const calculateTotal = (amount: number) => {
+    return amount + calculateStripeFee(amount);
+  };
+
+  const getTierBaseAmount = (tier: keyof typeof TIERS) => {
+    // Extract base amount from tier price string (e.g., "$500+" -> 500)
+    const priceStr = TIERS[tier].price;
+    return parseInt(priceStr.replace(/\D/g, ''));
+  };
+
   const handleSponsor = async (tier: keyof typeof TIERS) => {
     setLoading(tier);
     try {
+      const baseAmount = getTierBaseAmount(tier);
+      
       const { data, error } = await supabase.functions.invoke("create-payment", {
         body: {
-          priceId: TIERS[tier].priceId,
+          baseAmount: baseAmount * 100, // Convert to cents
           tier: tier,
         },
       });
@@ -202,6 +219,14 @@ const SponsorPage = () => {
                     className="pl-9"
                   />
                 </div>
+                {customAmount && parseFloat(customAmount) >= 1 && (
+                  <p className="text-sm text-muted-foreground">
+                    Total: ${calculateTotal(parseFloat(customAmount)).toFixed(2)}
+                    <span className="block text-xs">
+                      (includes ${calculateStripeFee(parseFloat(customAmount)).toFixed(2)} Stripe fee)
+                    </span>
+                  </p>
+                )}
               </div>
               <Button
                 onClick={handleCustomDonation}
@@ -231,6 +256,12 @@ const SponsorPage = () => {
                   {tier.name}
                 </div>
                 <CardTitle className="text-2xl">{tier.price}</CardTitle>
+                <CardDescription className="text-sm mt-2">
+                  Total: ${calculateTotal(getTierBaseAmount(key as keyof typeof TIERS)).toFixed(2)}
+                  <span className="block text-xs text-muted-foreground">
+                    (includes ${calculateStripeFee(getTierBaseAmount(key as keyof typeof TIERS)).toFixed(2)} Stripe fee)
+                  </span>
+                </CardDescription>
               </CardHeader>
 
               <CardContent className="flex-1 flex flex-col">
