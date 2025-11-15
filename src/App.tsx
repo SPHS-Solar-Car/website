@@ -25,10 +25,15 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/join" element={<JoinPage />} />
+          {/* Alias routes for user-friendly URLs */}
+          <Route path="/how-to-join" element={<JoinPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/contact-us" element={<ContactPage />} />
           <Route path="/points" element={<PointsPage />} />
           <Route path="/sponsors" element={<SponsorsPage />} />
           <Route path="/sponsor" element={<SponsorPage />} />
+          <Route path="/support" element={<SponsorPage />} />
+          <Route path="/support-us" element={<SponsorPage />} />
           <Route path="/sponsor/success" element={<SponsorSuccessPage />} />
           <Route path="/test-email" element={<TestEmailPage />} />
           <Route path="/test-admin-email" element={<TestAdminEmailPage />} />
