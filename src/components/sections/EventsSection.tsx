@@ -205,7 +205,7 @@ export function EventsSection() {
             className="bg-black text-white hover:bg-black/90"
           >
             <a 
-              href="https://calendar.google.com/calendar/embed?src=president%40stonypointsolarcar.org&ctz=America%2FChicago"
+              href="https://calendar.google.com/calendar/embed?src=c_c781544b48d9d7e3354cf1e4779ebe15939b39ec9f056fbfd99925bb3f7c82c8%40group.calendar.google.com&ctz=America%2FChicago"
               target="_blank"
               rel="noopener noreferrer"
             >
