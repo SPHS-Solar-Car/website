@@ -48,7 +48,7 @@ const handler = async (req: Request): Promise<Response> => {
     
     const emailResponse = await resend.emails.send({
       from: "Solar Car Donations <noreply@receipt.stonypointsolarcar.org>",
-      to: ["ishansinghal123@gmail.com", "president@stonypointsolarcar.org", "treasurer@stonypointsolarcar.org"],
+      to: ["president@stonypointsolarcar.org", "treasurer@stonypointsolarcar.org"],
       subject: `New Donation Received - $${formattedAmount}`,
       html: `
         <h1>New Donation Notification</h1>
