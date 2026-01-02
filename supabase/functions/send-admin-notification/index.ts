@@ -44,11 +44,17 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending admin notification for donation:", { fullName, email, amount, tier });
 
     const formattedAmount = (amount / 100).toFixed(2);
+    const adminEmails = [
+      "president@stonypointsolarcar.org",
+      "treasurer@stonypointsolarcar.org",
+      "ishansinghal123@gmail.com"
+    ];
+    console.log("Admin emails:", adminEmails);
     const addressLine2 = billingAddress.line2 ? `${billingAddress.line2}<br/>` : '';
     
     const emailResponse = await resend.emails.send({
       from: "Solar Car Donations <noreply@receipt.stonypointsolarcar.org>",
-      to: ["president@stonypointsolarcar.org","treasurer@stonypointsolarcar.org","ishansinghal123@gmail.com"], // Admin email
+      to: adminEmails,
       subject: `New Donation Received - $${formattedAmount}`,
       html: `
         <h1>New Donation Notification</h1>
@@ -84,7 +90,12 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Admin notification sent successfully:", emailResponse);
 
-    return new Response(JSON.stringify(emailResponse), {
+    return new Response(JSON.stringify({
+      success: true,
+      message: `Email sent to ${adminEmails.length} recipients`,
+      recipients: adminEmails,
+      response: emailResponse
+    }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
