@@ -52,49 +52,56 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Admin emails:", adminEmails);
     const addressLine2 = billingAddress.line2 ? `${billingAddress.line2}<br/>` : '';
     
-    const emailResponse = await resend.emails.send({
-      from: "Solar Car Donations <noreply@receipt.stonypointsolarcar.org>",
-      to: adminEmails,
-      subject: `New Donation Received - $${formattedAmount}`,
-      html: `
-        <h1>New Donation Notification</h1>
-        <p>A new donation has been received. Here are the details:</p>
-        
-        <h2>Donor Information</h2>
-        <ul>
-          <li><strong>Full Name:</strong> ${fullName}</li>
-          <li><strong>Email:</strong> ${email}</li>
-          <li><strong>Phone:</strong> ${phone}</li>
-          <li><strong>Public Sponsor:</strong> ${publicSponsor === 'yes' ? 'Yes - Wants public recognition' : 'No - Private donation'}</li>
-        </ul>
-        
-        <h2>Billing Address</h2>
-        <p>
-          ${billingAddress.line1}<br/>
-          ${addressLine2}
-          ${billingAddress.city}, ${billingAddress.state} ${billingAddress.postal_code}<br/>
-          ${billingAddress.country}
-        </p>
-        
-        <h2>Donation Details</h2>
-        <ul>
-          <li><strong>Amount:</strong> $${formattedAmount}</li>
-          <li><strong>Tier:</strong> ${tier.charAt(0).toUpperCase() + tier.slice(1)}</li>
-        </ul>
-        
-        <p style="margin-top: 30px; color: #666; font-size: 12px;">
-          This email was automatically generated from the Stony Point Solar Car Team donation system.
-        </p>
-      `,
-    });
+    const htmlContent = `
+      <h1>New Donation Notification</h1>
+      <p>A new donation has been received. Here are the details:</p>
+      
+      <h2>Donor Information</h2>
+      <ul>
+        <li><strong>Full Name:</strong> ${fullName}</li>
+        <li><strong>Email:</strong> ${email}</li>
+        <li><strong>Phone:</strong> ${phone}</li>
+        <li><strong>Public Sponsor:</strong> ${publicSponsor === 'yes' ? 'Yes - Wants public recognition' : 'No - Private donation'}</li>
+      </ul>
+      
+      <h2>Billing Address</h2>
+      <p>
+        ${billingAddress.line1}<br/>
+        ${addressLine2}
+        ${billingAddress.city}, ${billingAddress.state} ${billingAddress.postal_code}<br/>
+        ${billingAddress.country}
+      </p>
+      
+      <h2>Donation Details</h2>
+      <ul>
+        <li><strong>Amount:</strong> $${formattedAmount}</li>
+        <li><strong>Tier:</strong> ${tier.charAt(0).toUpperCase() + tier.slice(1)}</li>
+      </ul>
+      
+      <p style="margin-top: 30px; color: #666; font-size: 12px;">
+        This email was automatically generated from the Stony Point Solar Car Team donation system.
+      </p>
+    `;
 
-    console.log("Admin notification sent successfully:", emailResponse);
+    // Send email to each admin individually
+    const emailResponses = await Promise.all(
+      adminEmails.map(adminEmail =>
+        resend.emails.send({
+          from: "Solar Car Donations <noreply@receipt.stonypointsolarcar.org>",
+          to: adminEmail,
+          subject: `New Donation Received - $${formattedAmount}`,
+          html: htmlContent,
+        })
+      )
+    );
+
+    console.log("Admin notifications sent successfully to all recipients:", emailResponses);
 
     return new Response(JSON.stringify({
       success: true,
       message: `Email sent to ${adminEmails.length} recipients`,
       recipients: adminEmails,
-      response: emailResponse
+      responses: emailResponses
     }), {
       status: 200,
       headers: {
