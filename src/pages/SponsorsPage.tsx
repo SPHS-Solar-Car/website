@@ -54,24 +54,35 @@ export default function SponsorsPage() {
     }
   };
   const buildViewUrl = (id: string) => `https://drive.google.com/uc?export=view&id=${id}`;
-  const buildThumbUrl = (id: string) => `https://drive.google.com/thumbnail?id=${id}&sz=w600`;
-  const getPrimarySrc = (s: Sponsor) => s.logo; // trust backend first
+  const buildThumbUrl = (id: string, size = 600) => `https://drive.google.com/thumbnail?id=${id}&sz=w${size}`;
+  const getPrimarySrc = (s: Sponsor) => {
+    if (s.thumbnailLink) {
+      return s.thumbnailLink;
+    }
+
+    const id = extractDriveId(s.logo);
+    if (id) {
+      return buildThumbUrl(id, 600);
+    }
+
+    return s.logo;
+  };
 
   // Get tier-based card and logo sizing
   const getTierSizing = (tier: string) => {
     switch (tier.toLowerCase()) {
       case 'diamond sponsors':
-        return { cardWidth: 'max-w-[480px]', logoHeight: 'max-h-32', minHeight: 'min-h-[200px]' };
+        return { cardWidth: 'max-w-[480px]', logoHeight: 'h-28', minHeight: 'min-h-[200px]' };
       case 'platinum sponsors':
-        return { cardWidth: 'max-w-[420px]', logoHeight: 'max-h-28', minHeight: 'min-h-[180px]' };
+        return { cardWidth: 'max-w-[420px]', logoHeight: 'h-24', minHeight: 'min-h-[180px]' };
       case 'gold sponsors':
-        return { cardWidth: 'max-w-[360px]', logoHeight: 'max-h-24', minHeight: 'min-h-[160px]' };
+        return { cardWidth: 'max-w-[360px]', logoHeight: 'h-20', minHeight: 'min-h-[160px]' };
       case 'silver sponsors':
-        return { cardWidth: 'max-w-[320px]', logoHeight: 'max-h-20', minHeight: 'min-h-[140px]' };
+        return { cardWidth: 'max-w-[320px]', logoHeight: 'h-16', minHeight: 'min-h-[140px]' };
       case 'bronze sponsors':
-        return { cardWidth: 'max-w-[280px]', logoHeight: 'max-h-16', minHeight: 'min-h-[120px]' };
+        return { cardWidth: 'max-w-[280px]', logoHeight: 'h-14', minHeight: 'min-h-[120px]' };
       default:
-        return { cardWidth: 'max-w-[360px]', logoHeight: 'max-h-24', minHeight: 'min-h-[150px]' };
+        return { cardWidth: 'max-w-[360px]', logoHeight: 'h-20', minHeight: 'min-h-[150px]' };
     }
   };
 
@@ -123,7 +134,7 @@ export default function SponsorsPage() {
                           <img
                             src={getPrimarySrc(sponsor)}
                             alt={`${sponsor.name} logo`}
-                            className={`w-auto object-contain mx-auto ${sizing.logoHeight}`}
+                            className={`w-full max-w-full object-contain mx-auto ${sizing.logoHeight}`}
                             loading="lazy"
                             referrerPolicy="no-referrer"
                             onError={(e) => {
