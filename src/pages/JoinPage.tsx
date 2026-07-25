@@ -28,7 +28,7 @@ const steps = [{
   details: "Orientation and team assignment",
   icon: UserPlus
 }];
-const requirements = ["Currently enrolled student at our high school", "Strong interest in engineering, technology, or renewable energy", "Willingness to commit 4-6 hours per week to team activities", "Collaborative mindset and enthusiasm for learning", "No prior experience required - we'll teach you!"];
+const requirements = ["Currently enrolled student in Round Rock ISD", "Strong interest in engineering, technology, or renewable energy", "Willingness to commit 10-12 hours per week to team activities", "Collaborative mindset and enthusiasm for learning", "No prior experience required - we'll teach you!"];
 const subteams = [{
   name: "Mechanical Design",
   description: "Work on chassis design, aerodynamics, and structural components",
