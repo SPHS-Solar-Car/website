@@ -114,9 +114,11 @@ export default function JoinPage() {
             we accept new members throughout the school year!
           </p>
           <div className="flex justify-center">
-            <Button variant="hero" size="lg" className="group">
-              Join us
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            <Button variant="hero" size="lg" className="group" asChild>
+              <a href="https://forms.gle/CSzeK6gK28SrQSxM7" target="_blank" rel="noopener noreferrer">
+                Join us
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </a>
             </Button>
           </div>
         </div>
