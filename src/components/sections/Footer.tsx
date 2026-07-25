@@ -10,7 +10,6 @@ const footerLinks = {
   resources: [
     { name: "How to Join", href: "/join" },
     { name: "Events", href: "#events" },
-    { name: "Points", href: "/points" },
   ],
   connect: [
     { name: "Contact", href: "/contact" },

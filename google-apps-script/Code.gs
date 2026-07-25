@@ -4,7 +4,6 @@
 // Replace these with your actual IDs
 const CALENDAR_ID = 'c_4878007f96309e248f2110cc9dac2f871654c890a1f9d769060a08d3dd5ffe92@group.calendar.google.com';
 const DRIVE_FOLDER_ID = '16SpBTQsYJDZejgLrSZZcQP66KQUU3tDi';
-const POINTS_SHEET_ID = '1aF2N7PQhSSfBqhEjjGHSAqlD4t8KuH6VQ0pI0veBeC0';
 
 // Sponsor Tier Folder IDs - Add your Google Drive folder IDs here
 // To get folder ID: Open folder in Google Drive, copy ID from URL
@@ -36,11 +35,7 @@ function doPost(e) {
   try {
     const data = e.postData ? JSON.parse(e.postData.contents) : {};
     const action = data.action;
-    
-    if (action === 'lookup_student') {
-      return lookupStudent(data.student_id);
-    }
-    
+
     return ContentService
       .createTextOutput(JSON.stringify({success: false, message: 'Unknown action'}))
       .setMimeType(ContentService.MimeType.JSON);
@@ -55,22 +50,12 @@ function doPost(e) {
 function doGet(e) {
   var params = (e && e.parameter) ? e.parameter : {};
   try {
-    // Direct GET lookup: /exec?student_name=Full+Name
-    if (params.student_name) {
-      var result = handleLookupStudent(params.student_name);
-      return ContentService
-        .createTextOutput(JSON.stringify(result))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-
     var type = params.type;
     switch (type) {
       case 'events':
         return getCalendarEvents();
       case 'resources':
         return getGalleryImages();
-      case 'points':
-        return getMemberPoints();
       case 'sponsors':
         return getSponsorLogos();
       default:
@@ -136,89 +121,6 @@ function getGalleryImages() {
 
   return ContentService
     .createTextOutput(JSON.stringify({success: true, resources: imageResources}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-// Member Points - Populates Points Page
-function getMemberPoints() {
-  const sheet = SpreadsheetApp.openById(POINTS_SHEET_ID).getActiveSheet();
-  const data = sheet.getDataRange().getValues();
-  
-  // Skip header row
-  const members = data.slice(1).map((row, index) => ({
-    name: row[0],
-    studentId: row[0],
-    saturdayPoints: row[1] || 0,
-    logisticsPoints: row[2] || 0,
-    communityPoints: row[3] || 0,
-    referrals: row[4] || 0,
-    totalPoints: row[5] || 0,
-    rank: index + 1
-  })).sort((a, b) => b.totalPoints - a.totalPoints);
-
-  return ContentService
-    .createTextOutput(JSON.stringify({success: true, members: members}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-// Lookup individual student
-function lookupStudent(studentId) {
-  const sheet = SpreadsheetApp.openById(POINTS_SHEET_ID).getActiveSheet();
-  const dataRange = sheet.getDataRange();
-  const values = dataRange.getValues();
-  
-  // Search by name (case-insensitive)
-  for (let i = 1; i < values.length; i++) {
-    if (values[i][0] && values[i][0].toString().trim().toLowerCase() === studentId.toString().trim().toLowerCase()) {
-      const saturdayPoints = values[i][1] || 0;
-      const logisticsPoints = values[i][2] || 0;
-      const communityPoints = values[i][3] || 0;
-      const referrals = values[i][4] || 0;
-      const totalPoints = values[i][5] || 0;
-      
-      let rank = 1;
-      for (let j = 1; j < values.length; j++) {
-        if (j !== i && (values[j][5] || 0) > totalPoints) {
-          rank++;
-        }
-      }
-      
-      const studentData = {
-        name: values[i][0] || 'Unknown Student',
-        studentId: values[i][0],
-        totalPoints: totalPoints,
-        rank: rank,
-        categories: {
-          saturday: { 
-            points: saturdayPoints, 
-            activities: saturdayPoints > 0 ? [`Earned ${saturdayPoints} Saturday points`] : ['No Saturday activities recorded'] 
-          },
-          logistics: { 
-            points: logisticsPoints, 
-            activities: logisticsPoints > 0 ? [`Earned ${logisticsPoints} logistics points`] : ['No logistics activities recorded'] 
-          },
-          community: { 
-            points: communityPoints, 
-            activities: communityPoints > 0 ? [`Earned ${communityPoints} community points`] : ['No community activities recorded'] 
-          },
-          referrals: { 
-            points: referrals, 
-            activities: referrals > 0 ? [`${referrals} referrals`] : ['No referrals recorded'] 
-          }
-        },
-        recentActivity: [
-          { date: new Date().toISOString().split('T')[0], activity: "Data from Google Sheets", points: totalPoints, type: "system" }
-        ]
-      };
-      
-      return ContentService
-        .createTextOutput(JSON.stringify({success: true, student: studentData}))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-  }
-  
-  return ContentService
-    .createTextOutput(JSON.stringify({success: false, message: 'Student name not found'}))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -382,129 +284,6 @@ function handleSyncResources() {
       success: false,
       error: 'Failed to sync resources: ' + error.toString()
     };
-  }
-}
-
-function handleLookupStudent(studentId) {
-  try {
-    const sheet = SpreadsheetApp.openById(POINTS_SHEET_ID).getActiveSheet();
-    const dataRange = sheet.getDataRange();
-    const values = dataRange.getValues();
-    
-    console.log('Looking up student:', studentId);
-    
-    // Search by name (case-insensitive)
-    for (let i = 1; i < values.length; i++) {
-      if (values[i][0] && values[i][0].toString().trim().toLowerCase() === studentId.toString().trim().toLowerCase()) {
-        const saturdayPoints = values[i][1] || 0;
-        const logisticsPoints = values[i][2] || 0;
-        const communityPoints = values[i][3] || 0;
-        const referrals = values[i][4] || 0;
-        const totalPoints = values[i][5] || (saturdayPoints + logisticsPoints + communityPoints + referrals);
-        
-        let rank = 1;
-        for (let j = 1; j < values.length; j++) {
-          if (j !== i && values[j][5] > totalPoints) {
-            rank++;
-          }
-        }
-        
-        const studentData = {
-          name: values[i][0] || 'Unknown Student',
-          studentId: values[i][0], // Using name as ID since there's no student ID column
-          totalPoints: totalPoints,
-          rank: rank,
-          categories: {
-            saturday: { 
-              points: saturdayPoints, 
-              activities: saturdayPoints > 0 ? [`Earned ${saturdayPoints} Saturday points`] : ['No Saturday activities recorded'] 
-            },
-            logistics: { 
-              points: logisticsPoints, 
-              activities: logisticsPoints > 0 ? [`Earned ${logisticsPoints} logistics points`] : ['No logistics activities recorded'] 
-            },
-            community: { 
-              points: communityPoints, 
-              activities: communityPoints > 0 ? [`Earned ${communityPoints} community points`] : ['No community activities recorded'] 
-            },
-            referrals: { 
-              points: referrals, 
-              activities: referrals > 0 ? [`${referrals} referrals`] : ['No referrals recorded'] 
-            }
-          },
-          recentActivity: [
-            { date: new Date().toISOString().split('T')[0], activity: "Data from Google Sheets", points: totalPoints, type: "system" }
-          ]
-        };
-        
-        console.log('Student found:', studentData.name);
-        return {
-          success: true,
-          student: studentData
-        };
-      }
-    }
-    
-    console.log('Student not found:', studentId);
-    return {
-      success: false,
-      message: 'Student name not found'
-    };
-    
-  } catch (error) {
-    console.error('Error looking up student:', error);
-    return {
-      success: false,
-      error: 'Failed to lookup student: ' + error.toString()
-    };
-  }
-}
-
-function handleGetAllPoints() {
-  try {
-    const sheet = SpreadsheetApp.openById(POINTS_SHEET_ID).getActiveSheet();
-    const dataRange = sheet.getDataRange();
-    const values = dataRange.getValues();
-    
-    const members = [];
-    for (let i = 1; i < values.length; i++) {
-      if (values[i][0]) { // Check if name exists
-        const totalPoints = values[i][5] || 0;
-        
-        let rank = 1;
-        for (let j = 1; j < values.length; j++) {
-          if (j !== i && values[j][5] > totalPoints) {
-            rank++;
-          }
-        }
-        
-        members.push({
-          name: values[i][0] || 'Unknown',
-          studentId: values[i][0], // Using name as ID
-          saturdayPoints: values[i][1] || 0,
-          logisticsPoints: values[i][2] || 0,
-          communityPoints: values[i][3] || 0,
-          referrals: values[i][4] || 0,
-          totalPoints: totalPoints,
-          rank: rank
-        });
-      }
-    }
-    
-    members.sort((a, b) => b.totalPoints - a.totalPoints);
-    
-    console.log('Found', members.length, 'members');
-    return createCorsResponse({
-      success: true,
-      members: members
-    });
-    
-  } catch (error) {
-    console.error('Error getting all points:', error);
-    return createCorsResponse({
-      success: false,
-      error: 'Failed to get points data: ' + error.toString()
-    });
   }
 }
 

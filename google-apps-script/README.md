@@ -63,38 +63,19 @@ This directory contains the Google Apps Script code needed to connect your Googl
    - Click "Change to anyone with the link"
    - Set to "Viewer"
 
-#### C. Google Sheet for Student Points
-1. Create a new Google Sheet called "Student Points"
-2. Set up columns like this:
-   ```
-   | Name          | Email                  | Points |
-   |---------------|------------------------|--------|
-   | John Doe      | john@example.com       | 150    |
-   | Jane Smith    | jane@example.com       | 200    |
-   ```
-3. To get Sheet ID:
-   - Look at the URL: `https://docs.google.com/spreadsheets/d/SHEET_ID_HERE/edit`
-   - Copy the **Spreadsheet ID**
-4. The range is typically: `Sheet1!A:C` (adjust if your sheet name is different)
-
 ### 5. Configure Your Website
 
-1. Go to your website
-2. Navigate to the **Points** page
-3. Click the **Settings** icon (⚙️)
-4. Enter the following:
+1. Go to your website's Settings form (`GoogleScriptConfig.tsx`)
+2. Enter the following:
    - **Google Apps Script URL**: The web app URL you copied in step 3
    - **Calendar ID**: Your calendar ID (optional, leave blank for default calendar)
    - **Drive Folder ID**: Your gallery folder ID
-   - **Points Sheet ID**: Your Google Sheet ID
-   - **Points Sheet Range**: `Sheet1!A:C` (or your custom range)
-5. Click **Save Configuration**
+3. Click **Save Configuration**
 
 ### 6. Test the Integration
 
 1. Click "Refresh" on the Events section - you should see your calendar events
 2. Visit the Gallery section - you should see images from your Drive folder
-3. Visit the Points page - you should see the student leaderboard
 
 ## Troubleshooting
 

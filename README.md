@@ -8,7 +8,7 @@ The public website for the Stony Point High School (SPHS) Solar Car Team — hom
 - **Tailwind CSS** + **shadcn/ui** (Radix UI primitives) for components
 - **React Router** for client-side routing
 - **Supabase** — Edge Functions only (payments + transactional email), no database tables
-- **Google Apps Script** — acts as a free JSON API in front of Google Calendar, Drive, and Sheets (events, gallery photos, sponsor logos, points)
+- **Google Apps Script** — acts as a free JSON API in front of Google Calendar and Drive (events, gallery photos, sponsor logos)
 - **Netlify** — hosting/build/deploy
 - **Stripe** — sponsorship/donation payments
 - **Resend** — transactional emails (receipts, admin notifications, contact form)
@@ -17,7 +17,7 @@ The public website for the Stony Point High School (SPHS) Solar Car Team — hom
 
 ```
 src/
-  pages/                  Route-level pages (Index, JoinPage, ContactPage, PointsPage,
+  pages/                  Route-level pages (Index, JoinPage, ContactPage,
                            SponsorsPage, SponsorPage, SponsorSuccessPage, ...)
   components/
     sections/              Home page sections (Hero, About, Gallery, Events, Footer)
@@ -35,7 +35,7 @@ supabase/
     send-admin-notification/ Emails the team when a new donation/sponsorship comes in
     send-contact-form/       Emails the team when someone submits the Contact form
 google-apps-script/
-  Code.gs                  The Apps Script source that powers events/gallery/points/sponsors
+  Code.gs                  The Apps Script source that powers events/gallery/sponsors
   README.md                Step-by-step setup guide for the Apps Script + Google resources
 public/netlify.toml        Netlify build/deploy config
 ```
@@ -66,14 +66,14 @@ Note: `src/integrations/supabase/client.ts` is auto-generated and currently has 
 ## How the Website Is Organized
 
 - `Index.tsx` composes the home page out of the section components in `src/components/sections/` (Hero, About, Gallery, Events, Footer).
-- Each other page (Join, Contact, Points, Sponsors, Sponsor/Donate, Sponsor Success) is its own file in `src/pages/` and is wired up as a route in `src/App.tsx`.
+- Each other page (Join, Contact, Sponsors, Sponsor/Donate, Sponsor Success) is its own file in `src/pages/` and is wired up as a route in `src/App.tsx`.
 - Styling is Tailwind utility classes plus shadcn/ui components in `src/components/ui/` — these are generated components you can restyle directly, not a third-party package to upgrade.
 
 To add a new page: create a file in `src/pages/`, then add a `<Route>` for it in `src/App.tsx`. To change site copy/branding, edit the relevant section component directly (e.g. `AboutSection.tsx`, `HeroSection.tsx`).
 
-## Making Content Changes via Google (Gallery, Sponsors, Events, Points)
+## Making Content Changes via Google (Gallery, Sponsors, Events)
 
-This site does **not** store the gallery photos, sponsor logos, event calendar, or points leaderboard in code or in Supabase. Instead, it reads them live from Google Drive / Google Calendar / Google Sheets through a single Google Apps Script "web app" that acts as a lightweight API. This means non-developers can update these sections just by editing Google Drive folders/Sheets/Calendar — no code changes or redeploys needed.
+This site does **not** store the gallery photos, sponsor logos, or event calendar in code or in Supabase. Instead, it reads them live from Google Drive / Google Calendar through a single Google Apps Script "web app" that acts as a lightweight API. This means non-developers can update these sections just by editing Google Drive folders/Calendar — no code changes or redeploys needed.
 
 ### How it works
 
@@ -82,11 +82,9 @@ This site does **not** store the gallery photos, sponsor logos, event calendar, 
    - `?type=events` → upcoming events from a Google Calendar
    - `?type=resources` → images from a Google Drive folder (powers the Gallery)
    - `?type=sponsors` → logos from Google Drive folders, grouped by sponsor tier (bronze/silver/gold/platinum/diamond)
-   - `?type=points` → rows from a Google Sheet (powers the Points leaderboard)
-   - `?student_name=Full+Name` → look up one student's points
 3. On the frontend:
    - `src/config/googleScript.ts` holds the **production** Apps Script URL, hardcoded and used by `GallerySection.tsx` and `SponsorsPage.tsx` directly.
-   - `src/lib/googleAppsScript.ts` + `src/components/settings/GoogleScriptConfig.tsx` provide an alternate path where an admin can paste a script URL and various Calendar/Drive/Sheet IDs into a settings form; these are saved to `localStorage` and used by the Points page.
+   - `src/lib/googleAppsScript.ts` + `src/components/settings/GoogleScriptConfig.tsx` provide an alternate path where an admin can paste a script URL and various Calendar/Drive IDs into a settings form; these are saved to `localStorage`.
 
 ### To change what shows up in the Gallery
 
@@ -104,16 +102,11 @@ This site does **not** store the gallery photos, sponsor logos, event calendar, 
 1. Events come from a Google Calendar (`CALENDAR_ID` in `Code.gs`).
 2. Add/edit/delete events directly in that Google Calendar. Event title/date/time/description/location map directly onto the Events section; events with "competition" or "meeting" in the title get auto-tagged.
 
-### To change the Points leaderboard
-
-1. Points come from a Google Sheet (`POINTS_SHEET_ID` in `Code.gs`), with columns: `Name | Saturday Points | Logistics Points | Community Points | Referrals | Total Points`.
-2. Edit rows directly in the Sheet.
-
 ### Updating the Apps Script itself (adding new IDs, new endpoints, bug fixes)
 
-If you need to point the site at different Drive folders/Sheets/Calendars, or change the API logic:
+If you need to point the site at different Drive folders/Calendars, or change the API logic:
 
-1. Follow the full walkthrough in [`google-apps-script/README.md`](google-apps-script/README.md) — it covers creating the Apps Script project, deploying it as a Web App, getting Calendar/Drive/Sheet IDs, and configuring the site.
+1. Follow the full walkthrough in [`google-apps-script/README.md`](google-apps-script/README.md) — it covers creating the Apps Script project, deploying it as a Web App, getting Calendar/Drive IDs, and configuring the site.
 2. Edit `google-apps-script/Code.gs` locally, then copy/paste the updated code into the Apps Script editor at [script.google.com](https://script.google.com).
 3. Redeploy via **Deploy → Manage deployments → Edit (pencil) → New version → Deploy**. The web app URL stays the same, so nothing on the site needs to change unless you rotate the URL.
 4. If the URL does change, update `GOOGLE_SCRIPT_URL` in `src/config/googleScript.ts` and redeploy the site.
@@ -169,7 +162,6 @@ Typical flow: push/merge to the connected branch (e.g. `main`) → Netlify picks
 | Gallery photos | Google Drive folder | No |
 | Sponsor logos | Google Drive folders (per tier) | No |
 | Events | Google Calendar | No |
-| Points leaderboard | Google Sheet | No |
 | Page copy, layout, styling, new pages/routes | This repo (`src/`) | Yes (push → Netlify auto-deploys) |
 | Payment/email logic | `supabase/functions/*` | Yes (`supabase functions deploy`) |
 | Which Drive folders/Sheet/Calendar are used | `google-apps-script/Code.gs` (redeploy the Apps Script) | No site deploy needed, unless the script URL changes |

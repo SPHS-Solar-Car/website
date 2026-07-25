@@ -11,8 +11,6 @@ const STORAGE_KEYS = {
   SCRIPT_URL: 'google_apps_script_url',
   CALENDAR_ID: 'google_calendar_id',
   DRIVE_FOLDER_ID: 'google_drive_folder_id',
-  POINTS_SHEET_ID: 'google_points_sheet_id',
-  POINTS_SHEET_RANGE: 'google_points_sheet_range',
   SPONSOR_BRONZE_FOLDER: 'google_sponsor_bronze_folder',
   SPONSOR_SILVER_FOLDER: 'google_sponsor_silver_folder',
   SPONSOR_GOLD_FOLDER: 'google_sponsor_gold_folder',
@@ -30,13 +28,7 @@ export function GoogleScriptConfig() {
   const [driveFolderId, setDriveFolderId] = useState(() => 
     localStorage.getItem(STORAGE_KEYS.DRIVE_FOLDER_ID) || ''
   );
-  const [pointsSheetId, setPointsSheetId] = useState(() => 
-    localStorage.getItem(STORAGE_KEYS.POINTS_SHEET_ID) || ''
-  );
-  const [pointsSheetRange, setPointsSheetRange] = useState(() => 
-    localStorage.getItem(STORAGE_KEYS.POINTS_SHEET_RANGE) || 'Sheet1!A:C'
-  );
-  const [bronzeFolder, setBronzeFolder] = useState(() => 
+  const [bronzeFolder, setBronzeFolder] = useState(() =>
     localStorage.getItem(STORAGE_KEYS.SPONSOR_BRONZE_FOLDER) || ''
   );
   const [silverFolder, setSilverFolder] = useState(() => 
@@ -62,8 +54,6 @@ export function GoogleScriptConfig() {
     localStorage.setItem(STORAGE_KEYS.SCRIPT_URL, scriptUrl);
     localStorage.setItem(STORAGE_KEYS.CALENDAR_ID, calendarId);
     localStorage.setItem(STORAGE_KEYS.DRIVE_FOLDER_ID, driveFolderId);
-    localStorage.setItem(STORAGE_KEYS.POINTS_SHEET_ID, pointsSheetId);
-    localStorage.setItem(STORAGE_KEYS.POINTS_SHEET_RANGE, pointsSheetRange);
     localStorage.setItem(STORAGE_KEYS.SPONSOR_BRONZE_FOLDER, bronzeFolder);
     localStorage.setItem(STORAGE_KEYS.SPONSOR_SILVER_FOLDER, silverFolder);
     localStorage.setItem(STORAGE_KEYS.SPONSOR_GOLD_FOLDER, goldFolder);
@@ -85,7 +75,7 @@ export function GoogleScriptConfig() {
       <CardHeader>
         <CardTitle>Google Apps Script Configuration</CardTitle>
         <CardDescription>
-          Configure your Google Apps Script integration for calendar, gallery, and points tracking
+          Configure your Google Apps Script integration for calendar and gallery
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -119,28 +109,6 @@ export function GoogleScriptConfig() {
             placeholder="1a2b3c4d5e6f7g8h9i0j"
             value={driveFolderId}
             onChange={(e) => setDriveFolderId(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="pointsSheetId">Points Sheet ID</Label>
-          <Input
-            id="pointsSheetId"
-            type="text"
-            placeholder="1a2b3c4d5e6f7g8h9i0j"
-            value={pointsSheetId}
-            onChange={(e) => setPointsSheetId(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="pointsSheetRange">Points Sheet Range</Label>
-          <Input
-            id="pointsSheetRange"
-            type="text"
-            placeholder="Sheet1!A:C"
-            value={pointsSheetRange}
-            onChange={(e) => setPointsSheetRange(e.target.value)}
           />
         </div>
 

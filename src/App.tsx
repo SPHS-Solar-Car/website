@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import JoinPage from "./pages/JoinPage";
 import ContactPage from "./pages/ContactPage";
-import PointsPage from "./pages/PointsPage";
 import SponsorsPage from "./pages/SponsorsPage";
 import SponsorPage from "./pages/SponsorPage";
 import SponsorSuccessPage from "./pages/SponsorSuccessPage";
@@ -29,7 +28,6 @@ const App = () => (
           <Route path="/how-to-join" element={<JoinPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/contact-us" element={<ContactPage />} />
-          <Route path="/points" element={<PointsPage />} />
           <Route path="/sponsors" element={<SponsorsPage />} />
           <Route path="/sponsor" element={<SponsorPage />} />
           <Route path="/support" element={<SponsorPage />} />

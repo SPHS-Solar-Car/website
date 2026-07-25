@@ -191,59 +191,6 @@ class GoogleAppsScriptService {
     }
   }
 
-  // Get all student points
-  async getAllPoints(): Promise<any> {
-    if (!this.baseUrl) {
-      console.warn('Google Apps Script URL not configured');
-      return { success: false, members: [] };
-    }
-
-    try {
-      const response = await fetch(`${this.baseUrl}?type=points`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching all points:', error);
-      return { success: false, members: [] };
-    }
-  }
-
-  // Lookup individual student by ID
-  async lookupStudent(studentId: string): Promise<any> {
-    if (!this.baseUrl) {
-      console.warn('Google Apps Script URL not configured');
-      return { success: false, message: 'Not configured' };
-    }
-
-    try {
-      const params = new URLSearchParams({ student_name: studentId.trim() });
-      const response = await fetch(`${this.baseUrl}?${params.toString()}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error looking up student:', error);
-      return { success: false, message: 'Lookup failed' };
-    }
-  }
-
   // Get sponsor logos from Drive folders
   async getSponsorLogos(): Promise<any> {
     if (!this.baseUrl) {
