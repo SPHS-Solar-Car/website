@@ -1,6 +1,6 @@
 # SPHS Solar Car Team Website
 
-The public website for the Sunny Hills (SPHS) Solar Car Team — home page, events, gallery, points leaderboard, sponsorships, and contact/join forms.
+The public website for the Stony Point High School (SPHS) Solar Car Team — home page, events, gallery, sponsorships, and contact/join forms.
 
 ## Tech Stack
 
