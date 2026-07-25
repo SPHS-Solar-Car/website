@@ -58,7 +58,7 @@ export default function JoinPage() {
             No experience necessary - just passion and dedication!
           </p>
           <Button variant="default" size="lg" className="bg-foreground text-background hover:bg-foreground/90" asChild>
-            <a href="https://forms.gle/CL6K2THLiwVpgtRB6" target="_blank" rel="noopener noreferrer">Join Us</a>
+            <a href="https://forms.gle/CSzeK6gK28SrQSxM7" target="_blank" rel="noopener noreferrer">Join Us</a>
           </Button>
         </div>
       </section>
