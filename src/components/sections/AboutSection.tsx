@@ -41,7 +41,7 @@ export function AboutSection() {
               </div>
               <div className="flex justify-between text-sm sm:text-base">
                 <span>Competitions Won</span>
-                <span className="font-bold">3</span>
+                <span className="font-bold">8</span>
               </div>
               <div className="flex justify-between text-sm sm:text-base">
                 <span>Miles Driven</span>
