@@ -145,6 +145,10 @@ supabase functions deploy
 
 Secrets are managed with `supabase secrets set KEY=value` (or via the Supabase dashboard under Project Settings → Edge Functions), not through this repo.
 
+## How to bring Stripe back up
+
+Supabase automatically stops service to any servers that haven't been used for over a week. So if there aren't any donations in a week then Supabase locks it down. So to get it back up login to Supabase using the Webmaster's github and restart the server and then within 2-5 mins Stripe will be up and running again. 
+
 ## Hosting & Deployment (Netlify)
 
 The frontend is built and hosted on **Netlify**. Configuration lives in `public/netlify.toml`:
