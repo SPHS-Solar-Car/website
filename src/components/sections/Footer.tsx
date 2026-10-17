@@ -68,7 +68,7 @@ export function Footer() {
             </p>
             <div className="space-y-2 text-sm text-background/70">
               <a
-                href="mailto:christy_williams@roundrockisd.org"
+                href="mailto:vp-communications@stonypointsolarcar.org"
                 className="flex items-center gap-2 hover:text-background transition-smooth"
               >
                 <Mail className="h-4 w-4" />

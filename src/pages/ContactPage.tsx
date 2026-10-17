@@ -9,6 +9,7 @@ import { Footer } from "@/components/sections/Footer";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, Send, MessageSquare, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+
 const contactInfo = [
   {
     icon: Mail,
@@ -97,7 +98,12 @@ export default function ContactPage() {
                           </div>
                           <div>
                             <h3 className="font-semibold mb-1">{info.title}</h3>
-                            <p className="text-primary font-medium mb-1">{info.detail}</p>
+                            <a
+                              href={`mailto:${info.detail}`}
+                              className="block text-primary font-medium mb-1 hover:underline"
+                            >
+                              {info.detail}
+                            </a>
                             <p className="text-sm text-muted-foreground">{info.description}</p>
                           </div>
                         </div>

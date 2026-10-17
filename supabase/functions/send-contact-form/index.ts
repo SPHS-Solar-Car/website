@@ -27,7 +27,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "Stony Point Solar Car <webmaster@stonypointsolarcar.org>",
-      to: ["ishansinghal123@gmail.com"],
+      to: ["jsnhahne@gmail.com", "kai.land1619@gmail.com"],
       replyTo: email,
       subject: `Contact Form: ${subject}`,
       html: `
