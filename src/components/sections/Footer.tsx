@@ -71,8 +71,13 @@ export function Footer() {
                 href="mailto:vp-communications@stonypointsolarcar.org"
                 className="flex items-center gap-2 hover:text-background transition-smooth"
               >
-                <Mail className="h-4 w-4" />
-                <span>vp-communications@stonypointsolarcar.org</span>
+                <Mail className="h-4 w-4 shrink-0" />
+                {/* On narrow screens, wrap only after the @ rather than at the hyphen */}
+                <span>
+                  <span className="whitespace-nowrap">vp-communications@</span>
+                  <wbr />
+                  <span className="whitespace-nowrap">stonypointsolarcar.org</span>
+                </span>
               </a>
             </div>
           </div>

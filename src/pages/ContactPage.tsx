@@ -85,8 +85,8 @@ export default function ContactPage() {
 
       <BoardSection />
 
-      <section className="py-20">
-        <div className="container mx-auto px-6">
+      <section className="pb-12 sm:py-20">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-2xl mx-auto">
             {/* Contact Information */}
             <div className="space-y-8">
@@ -95,9 +95,9 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
                   {contactInfo.map((info, index) => (
                     <Card key={index} className="hover:shadow-solar transition-smooth">
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <div className="bg-primary/10 rounded-lg p-3">
+                      <CardContent className="p-4 sm:p-6">
+                        <div className="flex items-start gap-3 sm:gap-4">
+                          <div className="bg-primary/10 rounded-lg p-3 shrink-0">
                             <info.icon className="h-6 w-6 text-primary" />
                           </div>
                           <div>
@@ -105,7 +105,7 @@ export default function ContactPage() {
                             <a
                               href={`mailto:${info.detail}`}
                               title={`Email ${info.label}`}
-                              className="inline-flex items-center gap-2 mb-1 text-primary hover:text-primary/80 hover:underline transition-smooth"
+                              className="inline-flex items-center gap-2 mb-1 whitespace-nowrap text-primary hover:text-primary/80 hover:underline transition-smooth"
                             >
                               {info.label}
                               <Mail className="h-4 w-4 shrink-0" />

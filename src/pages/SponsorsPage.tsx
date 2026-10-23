@@ -122,7 +122,7 @@ export default function SponsorsPage() {
                   <Card className="bg-muted/50">
                     <CardContent className="p-12 text-center">
                       <p className="text-muted-foreground">
-                        Sponsor spots available. Contact us to become a {tier.tier.toLowerCase()} sponsor!
+                        Sponsor spots available. Contact us to become a {tier.tier.replace(/ Sponsors$/, "").toLowerCase()} sponsor!
                       </p>
                     </CardContent>
                   </Card>
@@ -176,7 +176,7 @@ export default function SponsorsPage() {
           {/* Call to Action */}
           <div className="mt-20 text-center">
             <Card className="max-w-2xl mx-auto bg-primary/5 border-primary/20">
-              <CardContent className="p-12">
+              <CardContent className="p-6 sm:p-12">
                 <h3 className="text-2xl font-bold mb-4">Become a Sponsor</h3>
                 <p className="mb-6 text-muted-foreground">
                   Support the future of sustainable transportation and inspire the next generation of engineers.

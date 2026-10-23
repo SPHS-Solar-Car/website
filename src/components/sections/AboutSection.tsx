@@ -51,7 +51,7 @@ export function AboutSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           <Card className="text-center p-4 sm:p-6 hover:shadow-solar transition-smooth">
             <CardContent className="pt-4 sm:pt-6">
               <Users className="h-10 w-10 sm:h-12 sm:w-12 text-primary mx-auto mb-3 sm:mb-4" />
