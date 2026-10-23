@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Header } from "@/components/navigation/Header";
 import { Footer } from "@/components/sections/Footer";
+import { BoardSection } from "@/components/sections/BoardSection";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, Send, MessageSquare, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -80,6 +81,8 @@ export default function ContactPage() {
           </p>
         </div>
       </section>
+
+      <BoardSection />
 
       <section className="py-20">
         <div className="container mx-auto px-6">
