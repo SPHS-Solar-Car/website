@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { ElectricButton } from "@/components/ui/electric-button";
 import { ChevronRight, Zap, Trophy } from "lucide-react";
 import heroImage from "@/assets/hero-team-photo.jpg";
 
@@ -17,7 +17,7 @@ const features = [
 export function HeroSection() {
   return (
     // Top padding matches the fixed header's height so content starts just below it
-    <section className="pt-[73px] sm:pt-[89px]">
+    <section className="pt-[73px] sm:pt-[89px] overflow-x-clip">
       <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 xl:py-6 text-center animate-fade-in">
         <h1 className="text-3xl font-bold tracking-tight sm:text-5xl lg:text-6xl xl:text-5xl mb-3 sm:mb-4">
           Racing Towards a<span className="block xl:inline"> Sustainable Future</span>
@@ -40,17 +40,13 @@ export function HeroSection() {
 
         <div className="xl:absolute xl:inset-x-0 xl:bottom-0 px-4 sm:px-6 lg:px-8 py-8 xl:py-5">
           <div className="flex justify-center items-center">
-            <Button
-              variant="hero"
-              size="lg"
-              className="group w-full sm:w-auto text-lg sm:text-xl px-8 py-6 sm:px-10 sm:py-7"
-              asChild
+            <ElectricButton
+              href="/sponsor"
+              className="group text-lg sm:text-xl px-10 py-3 sm:py-4"
             >
-              <a href="/sponsor">
-                Support Us!
-                <ChevronRight className="ml-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
-              </a>
-            </Button>
+              Support Us!
+              <ChevronRight className="ml-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+            </ElectricButton>
           </div>
 
           <div className="max-w-4xl xl:max-w-6xl mx-auto mt-8 xl:mt-14 grid grid-cols-3 gap-2 sm:gap-6 xl:gap-16 xl:text-white">
