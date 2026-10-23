@@ -16,6 +16,7 @@ const contactInfo = [
     icon: Mail,
     title: "Email",
     detail: "vp-communications@stonypointsolarcar.org",
+    label: "VP Communications",
     description: "General inquiries and information",
   },
 ];
@@ -103,9 +104,11 @@ export default function ContactPage() {
                             <h3 className="font-semibold mb-1">{info.title}</h3>
                             <a
                               href={`mailto:${info.detail}`}
-                              className="block text-primary font-medium mb-1 hover:underline"
+                              title={`Email ${info.label}`}
+                              className="inline-flex items-center gap-2 mb-1 text-primary hover:text-primary/80 hover:underline transition-smooth"
                             >
-                              {info.detail}
+                              {info.label}
+                              <Mail className="h-4 w-4 shrink-0" />
                             </a>
                             <p className="text-sm text-muted-foreground">{info.description}</p>
                           </div>
