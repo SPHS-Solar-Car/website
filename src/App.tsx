@@ -9,6 +9,8 @@ import ContactPage from "./pages/ContactPage";
 import SponsorsPage from "./pages/SponsorsPage";
 import SponsorPage from "./pages/SponsorPage";
 import SponsorSuccessPage from "./pages/SponsorSuccessPage";
+import ShopPage from "./pages/ShopPage";
+import ShopSuccessPage from "./pages/ShopSuccessPage";
 import TestEmailPage from "./pages/TestEmailPage";
 import TestAdminEmailPage from "./pages/TestAdminEmailPage";
 import NotFound from "./pages/NotFound";
@@ -33,6 +35,9 @@ const App = () => (
           <Route path="/support" element={<SponsorPage />} />
           <Route path="/support-us" element={<SponsorPage />} />
           <Route path="/sponsor/success" element={<SponsorSuccessPage />} />
+          <Route path="/shop" element={<ShopPage />} />
+          <Route path="/merch" element={<ShopPage />} />
+          <Route path="/shop/success" element={<ShopSuccessPage />} />
           <Route path="/test-email" element={<TestEmailPage />} />
           <Route path="/test-admin-email" element={<TestAdminEmailPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

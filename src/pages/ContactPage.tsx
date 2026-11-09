@@ -134,7 +134,7 @@ export default function ContactPage() {
                       className="flex items-center gap-3 text-primary hover:text-primary/80 transition-smooth"
                     >
                       <ExternalLink className="h-4 w-4" />
-                      Instagram @stpsolarcar2027
+                      Instagram @stpsolartigers
                     </a>
                   </div>
                 </CardContent>
