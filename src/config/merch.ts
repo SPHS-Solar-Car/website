@@ -68,6 +68,9 @@ export const MERCH_ITEMS: MerchItem[] = [
 
 export const MAX_QUANTITY_PER_LINE = 50;
 
+// Sales tax is calculated by Stripe Tax at checkout from the buyer's address,
+// so the order form can only show the pre-tax subtotal.
+
 export const getUnitPrice = (itemId: string, size: string): number | undefined =>
   MERCH_ITEMS.find((i) => i.id === itemId)?.sizes.find((s) => s.size === size)?.price;
 

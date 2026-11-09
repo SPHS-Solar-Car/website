@@ -27,6 +27,11 @@ const CATALOG: Record<string, { name: string; prices: Record<string, number> }> 
 const MAX_QUANTITY_PER_LINE = 50;
 const MAX_LINES = 20;
 
+// Sales tax is calculated by Stripe Tax (automatic_tax) using the Texas registration in the
+// Stripe dashboard. Items are tagged with Stripe's "Clothing and Footwear" tax code so clothing
+// rules (e.g. Texas sales-tax-holiday exemptions) apply correctly.
+const CLOTHING_TAX_CODE = "txcd_30011000";
+
 interface OrderLine {
   itemId: string;
   size: string;
@@ -48,6 +53,10 @@ serve(async (req) => {
       throw new Error(`Orders are limited to ${MAX_LINES} lines.`);
     }
 
+    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+      apiVersion: "2025-08-27.basil",
+    });
+
     const lineItems = items.map((line) => {
       const product = CATALOG[line.itemId];
       if (!product) throw new Error(`Unknown item: ${line.itemId}`);
@@ -62,15 +71,12 @@ serve(async (req) => {
       return {
         price_data: {
           currency: "usd",
-          product_data: { name: `${product.name} (${line.size})` },
+          product_data: { name: `${product.name} (${line.size})`, tax_code: CLOTHING_TAX_CODE },
           unit_amount: unitAmount,
+          tax_behavior: "exclusive", // tax is added on top of the listed price
         },
         quantity,
       };
-    });
-
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-      apiVersion: "2025-08-27.basil",
     });
 
     const origin = req.headers.get("origin");
@@ -82,6 +88,7 @@ serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: lineItems,
+      automatic_tax: { enabled: true },
       success_url: `${origin}/shop/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/shop`,
       billing_address_collection: "required",

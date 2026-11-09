@@ -48,7 +48,7 @@ const ShopPage = () => {
     setLines((prev) => (prev.length === 1 ? [newLine()] : prev.filter((l) => l.key !== key)));
 
   const lineTotal = (l: OrderLine) => (getUnitPrice(l.itemId, l.size) ?? 0) * l.quantity;
-  const total = lines.reduce((sum, l) => sum + lineTotal(l), 0);
+  const subtotal = lines.reduce((sum, l) => sum + Math.round(lineTotal(l) * 100), 0) / 100;
   const itemCount = lines.reduce((sum, l) => sum + (l.itemId && l.size ? l.quantity : 0), 0);
   const isComplete = (l: OrderLine) => l.itemId !== "" && l.size !== "" && l.quantity >= 1;
   const canCheckout = lines.every(isComplete) && !loading;
@@ -109,7 +109,7 @@ const ShopPage = () => {
                   <div className="aspect-square bg-white border-b">
                     <img
                       src={item.image}
-                      alt={`${item.name} — ${item.description}`}
+                      alt={`${item.name} â€” ${item.description}`}
                       className="h-full w-full object-contain"
                       loading="lazy"
                     />
@@ -237,14 +237,20 @@ const ShopPage = () => {
               Add another item
             </Button>
 
-            <div className="flex items-center justify-between pt-4 border-t">
-              <span className="text-lg font-semibold">
-                Total{" "}
-                <span className="text-sm font-normal text-muted-foreground">
-                  ({itemCount} {itemCount === 1 ? "item" : "items"})
+            <div className="pt-4 border-t space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-semibold">
+                  Subtotal{" "}
+                  <span className="text-sm font-normal text-muted-foreground">
+                    ({itemCount} {itemCount === 1 ? "item" : "items"})
+                  </span>
                 </span>
-              </span>
-              <span className="text-2xl font-bold">{formatUSD(total)}</span>
+                <span className="text-2xl font-bold">{formatUSD(subtotal)}</span>
+              </div>
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span>Sales tax</span>
+                <span>Calculated at checkout</span>
+              </div>
             </div>
 
             <Button
