@@ -130,7 +130,7 @@ export default function ContactPage() {
                   </p>
                   <div className="space-y-3">
                     <a
-                      href="https://www.instagram.com/stpsolarcar2027?cplk=bTVyeGt0c3Q5ZzBv"
+                      href="https://www.instagram.com/stpsolartigers?cplk=OWVncmZqYzBmc3Jj"
                       className="flex items-center gap-3 text-primary hover:text-primary/80 transition-smooth"
                     >
                       <ExternalLink className="h-4 w-4" />
