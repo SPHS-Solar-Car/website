@@ -24,6 +24,9 @@ const CATALOG: Record<string, { name: string; prices: Record<string, number> }> 
   },
 };
 
+// Shop switch. false = refuse every order. Keep in step with SHOP_ENABLED in src/config/merch.ts.
+const SHOP_OPEN = false;
+
 const MAX_QUANTITY_PER_LINE = 50;
 const MAX_LINES = 20;
 
@@ -41,6 +44,13 @@ interface OrderLine {
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  if (!SHOP_OPEN) {
+    return new Response(JSON.stringify({ error: "The shop is currently closed." }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 403,
+    });
   }
 
   try {

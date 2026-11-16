@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { SHOP_ENABLED } from "@/config/merch";
 import Index from "./pages/Index";
 import JoinPage from "./pages/JoinPage";
 import ContactPage from "./pages/ContactPage";
@@ -35,9 +36,10 @@ const App = () => (
           <Route path="/support" element={<SponsorPage />} />
           <Route path="/support-us" element={<SponsorPage />} />
           <Route path="/sponsor/success" element={<SponsorSuccessPage />} />
-          <Route path="/shop" element={<ShopPage />} />
-          <Route path="/merch" element={<ShopPage />} />
-          <Route path="/shop/success" element={<ShopSuccessPage />} />
+          {/* Shop is switched off with SHOP_ENABLED in src/config/merch.ts */}
+          <Route path="/shop" element={SHOP_ENABLED ? <ShopPage /> : <Navigate to="/" replace />} />
+          <Route path="/merch" element={SHOP_ENABLED ? <ShopPage /> : <Navigate to="/" replace />} />
+          <Route path="/shop/success" element={SHOP_ENABLED ? <ShopSuccessPage /> : <Navigate to="/" replace />} />
           <Route path="/test-email" element={<TestEmailPage />} />
           <Route path="/test-admin-email" element={<TestAdminEmailPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

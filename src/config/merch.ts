@@ -6,6 +6,11 @@ import hoodieImage from "@/assets/merch/hoodie.jpg";
 import poloImage from "@/assets/merch/polo.jpg";
 import tshirtImage from "@/assets/merch/tshirt.jpg";
 
+// Master switch for the shop. false = /shop, /merch and /shop/success redirect to the home page.
+// The checkout function has its own switch (SHOP_OPEN in
+// supabase/functions/create-merch-checkout/index.ts) — flip both to reopen the shop.
+export const SHOP_ENABLED = false;
+
 export type MerchId = "polo" | "tshirt" | "hoodie";
 
 export interface MerchSize {
