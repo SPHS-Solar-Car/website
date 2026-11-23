@@ -20,10 +20,11 @@ const SPONSOR_FOLDERS = {
 // TESTIMONIALS_SHEET_ID: the ID from the Google Sheet URL
 //   https://docs.google.com/spreadsheets/d/SHEET_ID_HERE/edit
 // TESTIMONIAL_NOTIFY_EMAIL: who gets emailed on each new submission.
+//   For several people, separate addresses with commas: 'a@example.org, b@example.org'
 //   Leave blank to email the Google account the script runs as.
 const TESTIMONIALS_SHEET_ID = '1ZMJEIZ5clu4OrUYg3MHpD_ZZkvtKW5dCHTa9t6eW7zs';
 const TESTIMONIALS_TAB_NAME = 'Testimonials';
-const TESTIMONIAL_NOTIFY_EMAIL = 'president@stonypointsolarcar.org';
+const TESTIMONIAL_NOTIFY_EMAIL = 'president@stonypointsolarcar.org, svp@stonypointsolarcar.org, vp-communications@stonypointsolarcar.org';
 // Every approved row shows in the alumni list; rows with a Message also show as a quote.
 // You can add alumni yourself: type a new row (Submitted can be blank) and tick Approved.
 // Start Year / End Year are plain 4-digit years. End Year can also be "Current member";
