@@ -10,6 +10,7 @@ const navigation = [
   { name: "Gallery", href: "/#gallery" },
   { name: "Events", href: "/#events" },
   { name: "How to Join", href: "/join" },
+  { name: "Testimonials", href: "/testimonials" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -26,7 +27,7 @@ export function Header() {
             onClick={() => setTimeout(() => window.scrollTo(0, 0), 0)}
           >
             <img src="/tiger-logo.png" alt="Solar Car Team Logo" className="h-7 w-7 sm:h-8 sm:w-8 lg:h-10 lg:w-10" />
-            <span className="text-xs sm:text-sm lg:text-base xl:text-lg font-bold whitespace-nowrap">
+            <span className="text-xs sm:text-sm lg:text-sm xl:text-lg font-bold whitespace-nowrap">
               Stony Point Solar Car
             </span>
           </Link>
@@ -38,17 +39,18 @@ export function Header() {
           </Button>
         </div>
 
-        <div className="hidden lg:flex lg:flex-1 lg:justify-center lg:gap-x-6">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-center lg:gap-x-3 xl:gap-x-6">
           {navigation.map((item) => (
             <Link
               key={item.name}
               to={item.href}
-              className="text-sm font-semibold leading-6 text-foreground hover:text-blue-900 hover:scale-110 transition-smooth whitespace-nowrap"
+              className="text-[13px] xl:text-sm font-semibold leading-6 text-foreground hover:text-blue-900 hover:scale-110 transition-smooth whitespace-nowrap"
               onClick={() => {
                 if (
                   item.href === "/" ||
                   item.href === "/join" ||
                   item.href === "/contact" ||
+                  item.href === "/testimonials" ||
                   item.href === "/sponsor" ||
                   item.href === "/sponsors"
                 ) {
@@ -110,6 +112,7 @@ export function Header() {
                         item.href === "/" ||
                         item.href === "/join" ||
                         item.href === "/contact" ||
+                        item.href === "/testimonials" ||
                         item.href === "/sponsor" ||
                         item.href === "/sponsors"
                       ) {

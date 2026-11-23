@@ -7,6 +7,7 @@ import { SHOP_ENABLED } from "@/config/merch";
 import Index from "./pages/Index";
 import JoinPage from "./pages/JoinPage";
 import ContactPage from "./pages/ContactPage";
+import TestimonialsPage from "./pages/TestimonialsPage";
 import SponsorsPage from "./pages/SponsorsPage";
 import SponsorPage from "./pages/SponsorPage";
 import SponsorSuccessPage from "./pages/SponsorSuccessPage";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/how-to-join" element={<JoinPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/contact-us" element={<ContactPage />} />
+          <Route path="/testimonials" element={<TestimonialsPage />} />
           <Route path="/sponsors" element={<SponsorsPage />} />
           <Route path="/sponsor" element={<SponsorPage />} />
           <Route path="/support" element={<SponsorPage />} />

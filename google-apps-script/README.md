@@ -118,6 +118,40 @@ If you need to make changes:
 5. Click **"Deploy"**
 6. The URL stays the same, no need to reconfigure your website
 
+## Testimonials (approval required)
+
+The `/testimonials` page shows a **Solar Car Alumni** list (name, year(s) on the team, college, major) plus quote cards for alumni who wrote a message. Alumni can submit themselves with the "Share Your Story" form. Each submission goes into a Google Sheet **unapproved** and you get an email. It only appears on the website after you approve it.
+
+### One-time setup
+
+1. Create a new Google Sheet (for example "Solar Car Testimonials"). Keep it **private**. Don't share it publicly.
+2. Copy its ID from the URL: `https://docs.google.com/spreadsheets/d/SHEET_ID_HERE/edit`
+3. In `Code.gs`, set `TESTIMONIALS_SHEET_ID` to that ID.
+   - Optional: set `TESTIMONIAL_NOTIFY_EMAIL` to the address that should get the notification emails. If you leave it blank, the emails go to the Google account the script runs as.
+4. Paste the updated `Code.gs` into your Apps Script project and deploy a **New version** (see "Updating the Script" above), so the website URL stays the same.
+5. Google will ask you to authorize the script again, because it now uses Sheets and email. Approve it.
+6. The script creates the "Testimonials" tab and its header row the first time someone submits.
+
+### Approving a testimonial
+
+1. You get an email titled **"New solar car testimonial from … (needs approval)"** with a link to the sheet.
+2. In the sheet, check the **Approved** checkbox (column H) on that row. You can also fix typos in the row first.
+3. The person shows up on the website the next time someone loads the page: always in the alumni list, and also as a quote card if they wrote a message.
+
+To reject one, delete its row or leave the checkbox unchecked. To remove someone later, uncheck the box.
+
+### Adding alumni yourself
+
+You don't need to wait for submissions. Add a new row to the "Testimonials" tab:
+
+| Submitted | Name | Start Year | End Year | College | Major | Message | Approved |
+|---|---|---|---|---|---|---|---|
+| *(leave blank)* | Jane Doe | 2019 | 2022 | Cornell University | Physics | *(optional)* | ☑ |
+
+Type years as plain 4-digit numbers. For a current member who is still on the team, type `Current member` as the End Year. For someone who was on the team for a single year, put it in Start Year and leave End Year blank.
+
+For the Approved cell, select it and choose **Insert > Checkbox**, then tick it. Typing `TRUE` also works. The list is sorted most recent first: current members at the top, then by End Year, then Start Year, then name.
+
 ## Support
 
 If you encounter any issues:
