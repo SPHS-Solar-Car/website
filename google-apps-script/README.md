@@ -134,8 +134,8 @@ The `/testimonials` page shows a **Solar Car Alumni** list (name, year(s) on the
 
 ### Approving a testimonial
 
-1. You get an email titled **"New solar car testimonial from … (needs approval)"** with a link to the sheet.
-2. In the sheet, check the **Approved** checkbox (column H) on that row. You can also fix typos in the row first.
+1. You get an email titled **"New solar car alumni submission from … (needs approval)"** with a link to the sheet.
+2. In the sheet, check the **Approved** checkbox (column I) on that row. You can also fix typos in the row first.
 3. The person shows up on the website the next time someone loads the page: always in the alumni list, and also as a quote card if they wrote a message.
 
 To reject one, delete its row or leave the checkbox unchecked. To remove someone later, uncheck the box.
@@ -144,9 +144,9 @@ To reject one, delete its row or leave the checkbox unchecked. To remove someone
 
 You don't need to wait for submissions. Add a new row to the "Testimonials" tab:
 
-| Submitted | Name | Start Year | End Year | College | Major | Message | Approved |
-|---|---|---|---|---|---|---|---|
-| *(leave blank)* | Jane Doe | 2019 | 2022 | Cornell University | Physics | *(optional)* | ☑ |
+| Submitted | First Name | Last Name | Start Year | End Year | College | Major | Message | Approved |
+|---|---|---|---|---|---|---|---|---|
+| *(leave blank)* | Jane | Doe | 2019 | 2022 | Cornell University | Physics | *(optional)* | ☑ |
 
 Type years as plain 4-digit numbers. For a current member who is still on the team, type `Current member` as the End Year. For someone who was on the team for a single year, put it in Start Year and leave End Year blank.
 

@@ -28,9 +28,9 @@ const TESTIMONIAL_NOTIFY_EMAIL = 'president@stonypointsolarcar.org';
 // You can add alumni yourself: type a new row (Submitted can be blank) and tick Approved.
 // Start Year / End Year are plain 4-digit years. End Year can also be "Current member";
 // a blank End Year means just the Start Year.
-const TESTIMONIAL_HEADERS = ['Submitted', 'Name', 'Start Year', 'End Year', 'College', 'Major', 'Message', 'Approved'];
-const TESTIMONIAL_APPROVED_COL = 8; // column H
-const TESTIMONIAL_LIMITS = { name: 100, college: 150, major: 100, message: 1000 };
+const TESTIMONIAL_HEADERS = ['Submitted', 'First Name', 'Last Name', 'Start Year', 'End Year', 'College', 'Major', 'Message', 'Approved'];
+const TESTIMONIAL_APPROVED_COL = 9; // column I
+const TESTIMONIAL_LIMITS = { firstName: 50, lastName: 50, college: 150, major: 100, message: 1000 };
 const TESTIMONIAL_MIN_YEAR = 1990;
 
 // CRITICAL: Proper OPTIONS handler for CORS preflight requests
@@ -399,7 +399,26 @@ function getTestimonialsSheet() {
     sheet.getRange(1, 1, 1, TESTIMONIAL_HEADERS.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
   }
+  splitNameColumnIfNeeded(sheet);
   return sheet;
+}
+
+// One-time upgrade for tabs created when there was a single "Name" column:
+// inserts a "Last Name" column and splits each name at its first space
+// ("Mary Ann Smith" -> "Mary" / "Ann Smith"; fix any odd ones by hand).
+function splitNameColumnIfNeeded(sheet) {
+  if (String(sheet.getRange(1, 2).getValue()).trim() !== 'Name') return;
+  sheet.insertColumnAfter(2);
+  sheet.getRange(1, 2, 1, 2).setValues([['First Name', 'Last Name']]).setFontWeight('bold');
+  const rowCount = sheet.getLastRow() - 1;
+  if (rowCount < 1) return;
+  const names = sheet.getRange(2, 2, rowCount, 1).getValues();
+  const split = names.map(row => {
+    const text = String(row[0]).trim();
+    const space = text.indexOf(' ');
+    return space === -1 ? [text, ''] : [text.slice(0, space), text.slice(space + 1).trim()];
+  });
+  sheet.getRange(2, 2, rowCount, 2).setValues(split);
 }
 
 // Trim, cap length, and stop Sheets from treating text as a formula.
@@ -417,7 +436,9 @@ function submitTestimonial(data) {
     return jsonOutput({ success: true });
   }
 
-  const name = cleanTestimonialField(data.name, TESTIMONIAL_LIMITS.name);
+  const firstName = cleanTestimonialField(data.firstName, TESTIMONIAL_LIMITS.firstName);
+  const lastName = cleanTestimonialField(data.lastName, TESTIMONIAL_LIMITS.lastName);
+  const name = firstName + ' ' + lastName;
   const startYear = Number(data.startYear);
   const isPresent = data.endYear === 'present';
   const endYear = isPresent ? 'Current member' : Number(data.endYear);
@@ -425,8 +446,8 @@ function submitTestimonial(data) {
   const major = cleanTestimonialField(data.major, TESTIMONIAL_LIMITS.major);
   const message = cleanTestimonialField(data.message, TESTIMONIAL_LIMITS.message);
 
-  if (!name || !college || !major) {
-    return jsonOutput({ success: false, error: 'Name, college, and major are required.' });
+  if (!firstName || !lastName || !college || !major) {
+    return jsonOutput({ success: false, error: 'First name, last name, college, and major are required.' });
   }
 
   const maxYear = new Date().getFullYear() + 1;
@@ -441,7 +462,7 @@ function submitTestimonial(data) {
   let sheet;
   try {
     sheet = getTestimonialsSheet();
-    sheet.appendRow([new Date(), name, startYear, endYear, college, major, message, false]);
+    sheet.appendRow([new Date(), firstName, lastName, startYear, endYear, college, major, message, false]);
     sheet.getRange(sheet.getLastRow(), TESTIMONIAL_APPROVED_COL).insertCheckboxes();
   } finally {
     lock.releaseLock();
@@ -480,19 +501,20 @@ function getApprovedTestimonials() {
 
   const rows = sheet.getRange(2, 1, lastRow - 1, TESTIMONIAL_HEADERS.length).getValues();
   const testimonials = rows
-    .filter(row => row[TESTIMONIAL_APPROVED_COL - 1] === true && row[1])
+    .filter(row => row[TESTIMONIAL_APPROVED_COL - 1] === true && (row[1] || row[2]))
     .map(row => {
-      const startYear = Number(row[2]) || 0;
+      const startYear = Number(row[3]) || 0;
       // End Year: a year, "Current member" (still on the team; "Present" also works),
       // or blank (= single year).
-      const endYear = /^\s*(current( member)?|present)\s*$/i.test(String(row[3])) ? 'present' : Number(row[3]) || startYear;
+      const endYear = /^\s*(current( member)?|present)\s*$/i.test(String(row[4])) ? 'present' : Number(row[4]) || startYear;
       return {
-        name: String(row[1]),
+        firstName: String(row[1]).trim(),
+        lastName: String(row[2]).trim(),
         startYear: startYear,
         endYear: endYear,
-        college: String(row[4]),
-        major: String(row[5] || ''),
-        message: String(row[6] || '')
+        college: String(row[5]),
+        major: String(row[6] || ''),
+        message: String(row[7] || '')
       };
     });
   // The website sorts the list by year, so row order here doesn't matter.

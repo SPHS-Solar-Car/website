@@ -15,7 +15,8 @@ import { GraduationCap, PenLine, Quote, Send, Users } from "lucide-react";
 import { GOOGLE_SCRIPT_URL } from "@/config/googleScript";
 
 interface Alum {
-  name: string;
+  firstName: string;
+  lastName: string;
   startYear: number;
   endYear: number | "present"; // "present" = current member, still on the team
   college: string;
@@ -27,24 +28,24 @@ interface Alum {
 // Never included in production builds.
 const DEMO_ALUMNI: Alum[] = [
   {
-    name: "Jordan Lee",
+    firstName: "Jordan", lastName: "Lee",
     startYear: 2021,
     endYear: 2024,
     college: "Rensselaer Polytechnic Institute",
     major: "Mechanical Engineering",
     message: "Building the car taught me more about engineering than any class. I still use what I learned wiring the battery pack.",
   },
-  { name: "Sam Patel", startYear: 2022, endYear: 2024, college: "SUNY Binghamton", major: "Electrical Engineering", message: "" },
+  { firstName: "Sam", lastName: "Patel", startYear: 2022, endYear: 2024, college: "SUNY Binghamton", major: "Electrical Engineering", message: "" },
   {
-    name: "Alex Rivera",
+    firstName: "Alex", lastName: "Rivera",
     startYear: 2020,
     endYear: 2023,
     college: "Rochester Institute of Technology",
     major: "Industrial Design",
     message: "The team gave me the confidence to lead a group and present to sponsors.",
   },
-  { name: "Morgan Chen", startYear: 2024, endYear: "present", college: "Stony Point High School", major: "Undecided", message: "" },
-  { name: "Casey Morgan", startYear: 2023, endYear: 2023, college: "Cornell University", major: "Computer Science", message: "" },
+  { firstName: "Morgan", lastName: "Chen", startYear: 2024, endYear: "present", college: "Stony Point High School", major: "Undecided", message: "" },
+  { firstName: "Casey", lastName: "Morgan", startYear: 2023, endYear: 2023, college: "Cornell University", major: "Computer Science", message: "" },
 ];
 
 // Earliest year offered in the form's dropdowns. Change this to the year the team started.
@@ -59,17 +60,20 @@ const formatYears = (a: Alum) => {
   return a.startYear === a.endYear ? `${a.startYear}` : `${a.startYear}–${a.endYear}`;
 };
 
+const fullName = (a: Alum) => `${a.firstName} ${a.lastName}`.trim();
+
 // Current members sort above every finished year.
 const endValue = (a: Alum) => (a.endYear === "present" ? Infinity : a.endYear);
 
 // Chronological, most recent first: by last year on the team, then by first
-// year (later start = more recent), then alphabetical.
+// year (later start = more recent), then alphabetical by last name, then first name.
 const sortAlumni = (list: Alum[]) =>
   [...list].sort(
     (a, b) =>
       (endValue(a) === endValue(b) ? 0 : endValue(b) > endValue(a) ? 1 : -1) ||
       b.startYear - a.startYear ||
-      a.name.localeCompare(b.name),
+      a.lastName.localeCompare(b.lastName) ||
+      a.firstName.localeCompare(b.firstName),
   );
 
 // Year dropdown that always opens downward and never runs under the fixed header:
@@ -115,7 +119,8 @@ function YearSelect({
 }
 
 const emptyForm = {
-  name: "",
+  firstName: "",
+  lastName: "",
   startYear: "",
   endYear: "",
   college: "",
@@ -282,7 +287,7 @@ export default function TestimonialsPage() {
                           <p className="italic text-foreground whitespace-pre-line">{t.message}</p>
                         </div>
                         <div className="mt-auto">
-                          <p className="font-semibold">{t.name}</p>
+                          <p className="font-semibold">{fullName(t)}</p>
                           <p className="text-sm text-muted-foreground">Solar Car Team · {formatYears(t)}</p>
                           <p className="text-sm text-primary flex items-center gap-1.5 mt-1">
                             <GraduationCap className="h-4 w-4 shrink-0" />
@@ -311,7 +316,7 @@ export default function TestimonialsPage() {
                   <Card className="sm:hidden divide-y divide-border">
                     {alumni.map((a, index) => (
                       <div key={index} className="p-4">
-                        <p className="font-semibold">{a.name}</p>
+                        <p className="font-semibold">{fullName(a)}</p>
                         <p className="text-sm text-muted-foreground">Solar Car Team · {formatYears(a)}</p>
                         <p className="text-sm mt-1">{a.college}</p>
                         {a.major && <p className="text-sm text-primary">{a.major}</p>}
@@ -333,7 +338,7 @@ export default function TestimonialsPage() {
                       <TableBody>
                         {alumni.map((a, index) => (
                           <TableRow key={index}>
-                            <TableCell className="font-medium whitespace-nowrap">{a.name}</TableCell>
+                            <TableCell className="font-medium whitespace-nowrap">{fullName(a)}</TableCell>
                             <TableCell className="whitespace-nowrap">{formatYears(a)}</TableCell>
                             <TableCell className="min-w-[10rem]">{a.college}</TableCell>
                             <TableCell className="min-w-[10rem]">{a.major}</TableCell>
@@ -382,16 +387,31 @@ export default function TestimonialsPage() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Name *</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        maxLength={100}
-                        required
-                      />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName">First name *</Label>
+                        <Input
+                          id="firstName"
+                          name="firstName"
+                          autoComplete="given-name"
+                          value={formData.firstName}
+                          onChange={handleInputChange}
+                          maxLength={50}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName">Last name *</Label>
+                        <Input
+                          id="lastName"
+                          name="lastName"
+                          autoComplete="family-name"
+                          value={formData.lastName}
+                          onChange={handleInputChange}
+                          maxLength={50}
+                          required
+                        />
+                      </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div className="space-y-2">
