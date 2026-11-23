@@ -44,7 +44,7 @@ const DEMO_ALUMNI: Alum[] = [
     major: "Industrial Design",
     message: "The team gave me the confidence to lead a group and present to sponsors.",
   },
-  { firstName: "Morgan", lastName: "Chen", startYear: 2024, endYear: "present", college: "Stony Point High School", major: "Undecided", message: "" },
+  { firstName: "Morgan", lastName: "Chen", startYear: 2024, endYear: "present", college: "", major: "", message: "" },
   { firstName: "Casey", lastName: "Morgan", startYear: 2023, endYear: 2023, college: "Cornell University", major: "Computer Science", message: "" },
 ];
 
@@ -198,6 +198,15 @@ export default function TestimonialsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Required: first name, last name, and both years. Everything else is optional.
+    if (!formData.firstName.trim() || !formData.lastName.trim()) {
+      toast({
+        title: "Missing name",
+        description: "Please enter your first and last name.",
+        variant: "destructive",
+      });
+      return;
+    }
     if (!formData.startYear || !formData.endYear) {
       toast({
         title: "Missing years",
@@ -289,11 +298,12 @@ export default function TestimonialsPage() {
                         <div className="mt-auto">
                           <p className="font-semibold">{fullName(t)}</p>
                           <p className="text-sm text-muted-foreground">Solar Car Team · {formatYears(t)}</p>
-                          <p className="text-sm text-primary flex items-center gap-1.5 mt-1">
-                            <GraduationCap className="h-4 w-4 shrink-0" />
-                            {t.college}
-                            {t.major && ` · ${t.major}`}
-                          </p>
+                          {(t.college || t.major) && (
+                            <p className="text-sm text-primary flex items-center gap-1.5 mt-1">
+                              <GraduationCap className="h-4 w-4 shrink-0" />
+                              {[t.college, t.major].filter(Boolean).join(" · ")}
+                            </p>
+                          )}
                         </div>
                       </CardContent>
                     </Card>
@@ -318,7 +328,7 @@ export default function TestimonialsPage() {
                       <div key={index} className="p-4">
                         <p className="font-semibold">{fullName(a)}</p>
                         <p className="text-sm text-muted-foreground">Solar Car Team · {formatYears(a)}</p>
-                        <p className="text-sm mt-1">{a.college}</p>
+                        {a.college && <p className="text-sm mt-1">{a.college}</p>}
                         {a.major && <p className="text-sm text-primary">{a.major}</p>}
                       </div>
                     ))}
@@ -340,8 +350,12 @@ export default function TestimonialsPage() {
                           <TableRow key={index}>
                             <TableCell className="font-medium whitespace-nowrap">{fullName(a)}</TableCell>
                             <TableCell className="whitespace-nowrap">{formatYears(a)}</TableCell>
-                            <TableCell className="min-w-[10rem]">{a.college}</TableCell>
-                            <TableCell className="min-w-[10rem]">{a.major}</TableCell>
+                            <TableCell className="min-w-[10rem]">
+                              {a.college || <span className="text-muted-foreground">—</span>}
+                            </TableCell>
+                            <TableCell className="min-w-[10rem]">
+                              {a.major || <span className="text-muted-foreground">—</span>}
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -430,18 +444,17 @@ export default function TestimonialsPage() {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="college">College attended *</Label>
+                      <Label htmlFor="college">College attended (optional)</Label>
                       <Input
                         id="college"
                         name="college"
                         value={formData.college}
                         onChange={handleInputChange}
                         maxLength={150}
-                        required
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="major">Major *</Label>
+                      <Label htmlFor="major">Major (optional)</Label>
                       <Input
                         id="major"
                         name="major"
@@ -449,7 +462,6 @@ export default function TestimonialsPage() {
                         value={formData.major}
                         onChange={handleInputChange}
                         maxLength={100}
-                        required
                       />
                     </div>
                     <div className="space-y-2">

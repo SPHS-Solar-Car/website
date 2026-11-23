@@ -9,11 +9,11 @@ const DRIVE_FOLDER_ID = '16SpBTQsYJDZejgLrSZZcQP66KQUU3tDi';
 // To get folder ID: Open folder in Google Drive, copy ID from URL
 // Example URL: https://drive.google.com/drive/folders/FOLDER_ID_HERE
 const SPONSOR_FOLDERS = {
-  bronze: 'YOUR_BRONZE_FOLDER_ID',
-  silver: 'YOUR_SILVER_FOLDER_ID',
-  gold: 'YOUR_GOLD_FOLDER_ID',
-  platinum: 'YOUR_PLATINUM_FOLDER_ID',
-  diamond: 'YOUR_DIAMOND_FOLDER_ID'  // Replace with your actual Diamond sponsor folder ID
+  bronze: '1S3n6Wy9Yqu5J7nQAIurgXqL8QnL6eR_U',
+  silver: '1kaeuZjlCxyndRzjQMt9EdyaDp6COa_bm',
+  gold: '1VqOMnBSjBPb7Eu79mc2y7vT3a8asvXBI',
+  platinum: '1oVWxgWuB1OI6d3RO84epwXstgvmoBS8S',
+  diamond: '196VqZu47rziOs5L6zk23JyvK3NemZQji'  // Replace with your actual Diamond sponsor folder ID
 };
 
 // Testimonials - alumni submissions that wait for approval before going public.
@@ -446,8 +446,9 @@ function submitTestimonial(data) {
   const major = cleanTestimonialField(data.major, TESTIMONIAL_LIMITS.major);
   const message = cleanTestimonialField(data.message, TESTIMONIAL_LIMITS.message);
 
-  if (!firstName || !lastName || !college || !major) {
-    return jsonOutput({ success: false, error: 'First name, last name, college, and major are required.' });
+  // Required: first name, last name, and both years (checked below). College, major, message are optional.
+  if (!firstName || !lastName) {
+    return jsonOutput({ success: false, error: 'First and last name are required.' });
   }
 
   const maxYear = new Date().getFullYear() + 1;
@@ -478,8 +479,8 @@ function submitTestimonial(data) {
         'A new alumni entry was submitted on the website.\n\n' +
         'Name: ' + name + '\n' +
         'Years on team: ' + years + '\n' +
-        'College: ' + college + '\n' +
-        'Major: ' + major + '\n' +
+        'College: ' + (college || '(none)') + '\n' +
+        'Major: ' + (major || '(none)') + '\n' +
         'Message: ' + (message || '(none)') + '\n\n' +
         'It will NOT appear on the website until you tick its "Approved" checkbox:\n' +
         sheetUrl
@@ -512,7 +513,7 @@ function getApprovedTestimonials() {
         lastName: String(row[2]).trim(),
         startYear: startYear,
         endYear: endYear,
-        college: String(row[5]),
+        college: String(row[5] || ''),
         major: String(row[6] || ''),
         message: String(row[7] || '')
       };
